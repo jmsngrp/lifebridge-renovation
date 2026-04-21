@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeBridge Church — Renovation Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --navy: #2b4560; --light-navy: #4e7499; --bg: #f8fafc; --border: #e2e8f0; }
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--bg); }
+        .header { background: var(--navy); color: white; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .logo-title { display: flex; align-items: center; gap: 1rem; }
+        .logo { width: 48px; height: 48px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .logo img { width: 40px; height: 40px; object-fit: contain; }
+        h1 { font-family: 'Montserrat', sans-serif; font-size: 1.75rem; font-weight: 800; }
+        .subtitle { font-size: 0.9rem; opacity: 0.8; margin-top: 0.25rem; }
+        .nav { display: flex; gap: 2rem; align-items: center; }
+        .nav-link { color: white; text-decoration: none; font-weight: 600; padding: 0.5rem 1rem; border-radius: 6px; transition: background 0.2s; }
+        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.1); }
+        .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+        .loading { text-align: center; padding: 4rem; color: var(--light-navy); }
+        .error { background: #fee; color: #c53030; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .tabs { border-bottom: 2px solid var(--border); margin-bottom: 2rem; }
+        .tab-nav { display: flex; gap: 0; }
+        .tab-btn { background: none; border: none; padding: 1rem 2rem; font-family: 'Montserrat', sans-serif; font-weight: 600; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; }
+        .tab-btn.active { color: var(--navy); border-bottom-color: var(--navy); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo-title">
+            <div class="logo">
+                <img src="/logo.jpg" alt="LifeBridge Church" onerror="this.style.display='none'">
+            </div>
+            <div>
+                <h1>LifeBridge Church</h1>
+                <div class="subtitle">Renovation Budget & Volunteer Tracker</div>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="#" class="nav-link" onclick="showTab('budget')">Budget</a>
+            <a href="#" class="nav-link" onclick="showTab('volunteers')">Volunteers</a>
+            <a href="/logout" class="nav-link">Sign Out</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="loading" id="loading">Loading tracker...</div>
+        <div class="error" id="error" style="display: none;"></div>
+        
+        <div class="tabs">
+            <div class="tab-nav">
+                <button class="tab-btn active" onclick="showTab('budget')">Budget Overview</button>
+                <button class="tab-btn" onclick="showTab('volunteers')">Volunteer Hours</button>
+            </div>
+        </div>
+
+        <div id="budget-tab" class="tab-content active">
+            <h2>Budget Tracking</h2>
+            <p>Budget tracking features will load here...</p>
+            <div id="budget-content">
+                <!-- Budget content will be dynamically loaded -->
+            </div>
+        </div>
+
+        <div id="volunteers-tab" class="tab-content">
+            <h2>Volunteer Hours</h2>
+            <p>Volunteer tracking features will load here...</p>
+            <div id="volunteers-content">
+                <!-- Volunteer content will be dynamically loaded -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Basic tab functionality
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Basic data loading
+        let data = {};
+
+        function loadData() {
+            fetch('/api/data')
+                .then(response => response.json())
+                .then(result => {
+                    if (result.ok) {
+                        data = result.data;
+                        document.getElementById('loading').style.display = 'none';
+                        renderBudget();
+                        renderVolunteers();
+                    } else {
+                        showError('Failed to load data: ' + result.error);
+                    }
+                })
+                .catch(error => {
+                    showError('Network error: ' + error.message);
+                });
+        }
+
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').textContent = message;
+            document.getElementById('error').style.display = 'block';
+        }
+
+        function renderBudget() {
+            const expenses = data.lb_expenses2 || [];
+            const totalExpenses = expenses.reduce((sum, exp) => sum + (exp.amount || 0), 0);
+            
+            document.getElementById('budget-content').innerHTML = `
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
+                    <h3>Total Expenses: $${totalExpenses.toLocaleString()}</h3>
+                    <p>${expenses.length} expense entries</p>
+                </div>
+            `;
+        }
+
+        function renderVolunteers() {
+            const volunteers = data.lb_volunteers || [];
+            const totalHours = volunteers.reduce((sum, vol) => sum + (vol.hours * vol.people || 0), 0);
+            
+            document.getElementById('volunteers-content').innerHTML = `
+                <div style="background: white; padding: 1.5rem; border-radius: 12px; margin: 1rem 0;">
+                    <h3>Total Volunteer Hours: ${totalHours}</h3>
+                    <p>${volunteers.length} volunteer entries</p>
+                </div>
+            `;
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
