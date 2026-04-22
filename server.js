@@ -15,8 +15,8 @@ app.use(express.json({limit:'10mb'}));
 app.use(express.urlencoded({extended:true}));
 app.use(session({store:new pgSession({pool,tableName:'session'}),secret:process.env.SESSION_SECRET||'lifebridge-secret-2026',resave:false,saveUninitialized:false,cookie:{maxAge:7*24*60*60*1000,secure:process.env.NODE_ENV==='production'}}));
 app.get('/login',(req,res)=>{ if(req.session.authenticated)return res.redirect('/'); res.sendFile(path.join(__dirname,'public','login.html')); });
-app.post('/login',async(req,res)=>{ const {password}=req.body; const ok=await checkPassword(password); if(ok){ req.session.authenticated=true; res.redirect('/'); }else{ res.redirect('/login?error=1'); } });
-app.get('/logout',(req,res)=>{ req.session.destroy(()=>res.redirect('/login')); });
+app.post('/login',async(req,res)=>{ const {password}=req.body; console.log('Login attempt:', password); const ok=await checkPassword(password); console.log('Password check result:', ok); if(ok){ req.session.authenticated=true; res.redirect('/'); }else{ res.redirect('/login?error=1'); } });
+
 app.get('/',requireAuth,(req,res)=>{ res.sendFile(path.join(__dirname,'public','index.html')); });
 app.get('/api/data',requireAuth,async(req,res)=>{ try{ const r=await pool.query('SELECT key,value FROM tracker_data'); const d={}; r.rows.forEach(row=>{ try{d[row.key]=JSON.parse(row.value);}catch(e){d[row.key]=row.value;} }); res.json({ok:true,data:d}); }catch(e){ res.status(500).json({ok:false,error:e.message}); } });
 app.post('/api/data/bulk',requireAuth,async(req,res)=>{ try{ const {data}=req.body; if(!data)return res.status(400).json({ok:false}); const client=await pool.connect(); try{ await client.query('BEGIN'); for(const [key,value] of Object.entries(data)){ const val=typeof value==='string'?value:JSON.stringify(value); await client.query('INSERT INTO tracker_data (key,value,updated_at) VALUES ($1,$2,NOW()) ON CONFLICT (key) DO UPDATE SET value=$2,updated_at=NOW()',[key,val]); } await client.query('COMMIT'); }catch(e){ await client.query('ROLLBACK'); throw e; }finally{ client.release(); } res.json({ok:true}); }catch(e){ res.status(500).json({ok:false,error:e.message}); } });
