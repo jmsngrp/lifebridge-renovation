@@ -6,6 +6,8 @@ const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 
 const app = express();
+app.set('trust proxy', 1); // Required for secure cookies behind Railway's proxy
+
 const PORT = process.env.PORT || 3000;
 
 const pool = new Pool({
