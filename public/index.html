@@ -621,7 +621,11 @@
     <button class="nav-tab active" onclick="switchPage('budget')">Budget</button>
     <button class="nav-tab" onclick="switchPage('volunteers')">Volunteers</button>
   </div>
-  <button onclick="exportDataJSON()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;" title="Generate PDF Report" id="pdf-btn">⬇ PDF Report</button>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="save-indicator" style="font-size:.72rem;color:var(--ice);opacity:0;transition:opacity .4s;font-family:'Montserrat',sans-serif;letter-spacing:.05em;"></span>
+    <button onclick="exportDataJSON()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;" title="Generate PDF Report" id="pdf-btn">⬇ PDF Report</button>
+    <a href="/logout" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;text-decoration:none;">Sign Out</a>
+  </div>
 </div>
 
 <div class="container">
@@ -967,6 +971,8 @@ function save() {
   if (!_dataLoaded) { console.warn('Save blocked — data not loaded yet.'); return; }
   clearTimeout(_saveTimer);
   _saveTimer = setTimeout(function() {
+    var ind = document.getElementById('save-indicator');
+    if (ind) { ind.textContent = 'Saving...'; ind.style.opacity = '1'; }
     fetch('/api/data/bulk', {
       method: 'POST',
       credentials: 'include',
@@ -977,8 +983,17 @@ function save() {
         lb_phases:       JSON.stringify(phases),
         lb_projects:     JSON.stringify(projects)
       }})
-    }).then(function(r){ if(!r.ok) console.error('Save failed:', r.status); })
-      .catch(function(e){ console.error('Save error:', e); });
+    }).then(function(r){
+      if (r.ok) {
+        if (ind) { ind.textContent = 'Saved ✓'; setTimeout(function(){ ind.style.opacity='0'; }, 2000); }
+      } else {
+        if (ind) { ind.textContent = 'Save failed!'; ind.style.color='#ff9999'; }
+        console.error('Save failed:', r.status);
+      }
+    }).catch(function(e){
+      if (ind) { ind.textContent = 'Save failed!'; ind.style.color='#ff9999'; }
+      console.error('Save error:', e);
+    });
   }, 300);
 }
 
