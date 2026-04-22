@@ -32,23 +32,23 @@
     --shadow-lg:  0 8px 32px rgba(27,52,80,.18);
     --radius:     10px;
   }
- 
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
- 
+
   body {
     font-family: 'Source Sans 3', sans-serif;
     background: var(--off-white);
     color: var(--text);
     min-height: 100vh;
   }
- 
+
   /* ── Top Bar ── */
   .topbar {
     background: var(--navy-deep);
     height: 4px;
     background: linear-gradient(90deg, var(--sky), var(--navy-light), var(--navy));
   }
- 
+
   /* ── Header ── */
   .header {
     background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, var(--navy-mid) 100%);
@@ -62,7 +62,7 @@
     position: relative;
     overflow: hidden;
   }
- 
+
   /* Subtle geometric pattern in header */
   .header::before {
     content: '';
@@ -81,7 +81,7 @@
     border: 28px solid rgba(255,255,255,.03);
     border-radius: 50%;
   }
- 
+
   .header-brand {
     display: flex;
     align-items: center;
@@ -89,7 +89,7 @@
     position: relative;
     z-index: 1;
   }
- 
+
   .logo-wrap {
     width: 56px; height: 56px;
     background: rgba(255,255,255,.1);
@@ -100,7 +100,7 @@
     overflow: hidden;
   }
   .logo-wrap img { width: 46px; height: 46px; object-fit: contain; }
- 
+
   .header-text h1 {
     font-family: 'Montserrat', sans-serif;
     font-size: 1.45rem;
@@ -115,7 +115,7 @@
     font-weight: 400;
     letter-spacing: .02em;
   }
- 
+
   .header-controls {
     display: flex;
     align-items: center;
@@ -123,10 +123,10 @@
     position: relative;
     z-index: 1;
   }
- 
+
   /* ── Layout ── */
   .container { max-width: 1220px; margin: 0 auto; padding: 28px 24px; }
- 
+
   /* ── Section Label ── */
   .section-label {
     font-family: 'Montserrat', sans-serif;
@@ -136,7 +136,7 @@
     margin-bottom: 10px;
     padding-left: 2px;
   }
- 
+
   /* ── KPI Cards ── */
   .kpi-grid {
     display: grid;
@@ -146,7 +146,7 @@
   }
   @media(max-width:1100px){ .kpi-grid { grid-template-columns: repeat(3,1fr); } }
   @media(max-width:600px)  { .kpi-grid { grid-template-columns: repeat(2,1fr); } }
- 
+
   .kpi-card {
     background: var(--white);
     border: 1px solid var(--border);
@@ -167,7 +167,7 @@
   }
   .kpi-card.highlight { background: var(--navy); border-color: var(--navy-dark); }
   .kpi-card.highlight::before { background: linear-gradient(90deg, var(--sky), var(--ice)); }
- 
+
   .kpi-icon { font-size: 1.1rem; margin-bottom: 8px; opacity: .7; }
   .kpi-label {
     font-family: 'Montserrat', sans-serif;
@@ -184,7 +184,7 @@
   .kpi-card.highlight .kpi-value { color: var(--white); }
   .kpi-sub { font-size: .78rem; margin-top: 5px; color: var(--text-muted); }
   .kpi-card.highlight .kpi-sub { color: var(--ice); opacity: .8; }
- 
+
   /* ── Progress Section ── */
   .progress-section {
     background: var(--white);
@@ -238,11 +238,11 @@
   }
   .legend span { display: flex; align-items: center; gap: 5px; }
   .legend-dot { width: 9px; height: 9px; border-radius: 50%; }
- 
+
   /* ── Two Column ── */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
   @media(max-width:760px) { .two-col { grid-template-columns: 1fr; } }
- 
+
   /* ── Panel ── */
   .panel {
     background: var(--white);
@@ -264,7 +264,7 @@
     color: var(--white);
   }
   .panel-body { padding: 18px 20px; }
- 
+
   /* ── Category Rows ── */
   .cat-row { margin-bottom: 13px; }
   .cat-info { display: flex; justify-content: space-between; align-items: center; font-size: .83rem; margin-bottom: 5px; }
@@ -280,10 +280,10 @@
   .badge-green  { background: var(--green-pale);  color: var(--green); }
   .badge-amber  { background: var(--amber-pale);  color: var(--amber); }
   .badge-red    { background: var(--red-pale);    color: var(--red); }
- 
+
   /* ── Chart ── */
   .chart-wrap { position: relative; height: 185px; }
- 
+
   /* ── Projections ── */
   .proj-table { width: 100%; border-collapse: collapse; font-size: .83rem; }
   .proj-table th {
@@ -296,7 +296,7 @@
   .proj-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); }
   .proj-table tr:last-child td { border-bottom: none; font-weight: 700; background: var(--ice-pale); }
   .proj-table tbody tr:hover td { background: var(--ice-pale); }
- 
+
   /* ── Health panel ── */
   .health-row {
     display: flex; justify-content: space-between; align-items: center;
@@ -305,7 +305,7 @@
   .health-row:last-child { border-bottom: none; }
   .health-key { font-size: .81rem; color: var(--text-muted); }
   .health-val { font-size: .83rem; font-weight: 700; }
- 
+
   /* ── Form ── */
   .form-section {
     background: var(--white);
@@ -351,7 +351,7 @@
   }
   .btn-primary:hover { background: var(--navy-mid); }
   .btn-primary:active { transform: scale(.97); }
- 
+
   .btn-sm {
     background: rgba(255,255,255,.12); color: var(--ice);
     border: 1px solid rgba(255,255,255,.2);
@@ -361,7 +361,7 @@
     cursor: pointer; transition: all .2s;
   }
   .btn-sm:hover { background: rgba(255,255,255,.22); }
- 
+
   .btn-outline {
     background: none; color: var(--navy);
     border: 1.5px solid var(--border);
@@ -371,7 +371,7 @@
     cursor: pointer; transition: all .2s;
   }
   .btn-outline:hover { border-color: var(--navy-light); color: var(--navy-light); }
- 
+
   /* ── Log Table ── */
   .log-section {
     background: var(--white);
@@ -404,7 +404,7 @@
     background: rgba(255,255,255,.18); border-color: var(--sky);
     box-shadow: 0 0 0 3px rgba(111,163,200,.25);
   }
- 
+
   table { width: 100%; border-collapse: collapse; font-size: .84rem; }
   thead { background: var(--ice-pale); }
   th {
@@ -417,7 +417,7 @@
   td { padding: 11px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
   tbody tr:hover td { background: var(--ice-pale); }
- 
+
   .btn-icon {
     background: none; border: 1.5px solid var(--border);
     border-radius: 5px; width: 27px; height: 27px;
@@ -425,7 +425,7 @@
     cursor: pointer; font-size: .78rem; transition: all .15s; color: var(--text-muted);
   }
   .btn-icon:hover { background: var(--red-pale); border-color: var(--red); color: var(--red); }
- 
+
   .chip {
     display: inline-block; padding: 2px 9px;
     border-radius: 100px; font-size: .7rem; font-weight: 700;
@@ -433,9 +433,9 @@
   }
   .chip-weekly  { background: #e0ecf8; color: var(--navy); }
   .chip-monthly { background: #e6f4ec; color: var(--green); }
- 
+
   .empty-state { padding: 44px; text-align: center; color: var(--text-muted); font-size: .9rem; }
- 
+
   /* ── Modal ── */
   .modal-backdrop {
     display: none; position: fixed; inset: 0;
@@ -461,7 +461,7 @@
     font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
     cursor: pointer;
   }
- 
+
   /* ── Toast ── */
   .toast {
     position: fixed; bottom: 24px; right: 24px;
@@ -473,7 +473,7 @@
     transition: all .3s; pointer-events: none; z-index: 999;
   }
   .toast.show { opacity: 1; transform: translateY(0); }
- 
+
   /* ── Projection Settings Bar ── */
   .proj-settings-bar {
     background: var(--white);
@@ -530,7 +530,7 @@
     border-left: 2px solid var(--border);
     padding-left: 10px;
   }
- 
+
   /* ── Nav Tabs ── */
   .nav-tabs {
     background: var(--navy-dark);
@@ -550,11 +550,11 @@
   }
   .nav-tab:hover { color: rgba(255,255,255,.85); }
   .nav-tab.active { color: var(--white); border-bottom-color: var(--sky); }
- 
+
   /* ── Page visibility ── */
   .page { display: none; }
   .page.active { display: block; }
- 
+
   /* ── Volunteer KPI grid ── */
   .vol-kpi-grid {
     display: grid;
@@ -563,7 +563,7 @@
     margin-bottom: 24px;
   }
   @media(max-width:900px){ .vol-kpi-grid { grid-template-columns: repeat(2,1fr); } }
- 
+
   /* ── Volunteer role badge ── */
   .role-badge {
     display: inline-block; padding: 2px 10px;
@@ -571,7 +571,7 @@
     font-family: 'Montserrat', sans-serif; letter-spacing: .04em;
     background: var(--ice-pale); color: var(--navy-light);
   }
- 
+
   /* ── Phase breakdown ── */
   .phase-block { margin-bottom: 10px; }
   .phase-header {
@@ -585,7 +585,7 @@
   }
   .subcat-row { margin-bottom: 8px; margin-top: 4px; }
   .phase-subcats { padding: 6px 0 4px; border-left: 3px solid var(--border); margin-left: 8px; padding-left: 8px; }
- 
+
   /* ── Diamond divider ── */
   .divider {
     display: flex; align-items: center; gap: 12px;
@@ -602,7 +602,7 @@
 </head>
 <body>
 <div class="topbar"></div>
- 
+
 <div class="header">
   <div class="header-brand">
     <div class="logo-wrap">
@@ -613,9 +613,9 @@
       <p>Renovation Budget Tracker &nbsp;·&nbsp; $500,000 &nbsp;·&nbsp; 2026–2028</p>
     </div>
   </div>
- 
+
 </div>
- 
+
 <div class="nav-tabs" style="display:flex;justify-content:space-between;align-items:center;padding-right:20px;">
   <div style="display:flex;">
     <button class="nav-tab active" onclick="switchPage('budget')">Budget</button>
@@ -623,13 +623,13 @@
   </div>
   <button onclick="exportDataJSON()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;" title="Generate PDF Report" id="pdf-btn">⬇ PDF Report</button>
 </div>
- 
+
 <div class="container">
- 
+
 <div class="page active" id="page-budget">
   <!-- KPI Cards -->
   <div class="kpi-grid" id="kpi-grid"></div>
- 
+
   <!-- Progress Bars -->
   <div class="progress-section">
     <!-- Overall -->
@@ -651,10 +651,10 @@
       <span><span class="legend-dot" style="background:linear-gradient(90deg,var(--navy),var(--sky));"></span>Spent</span>
       <span><span class="legend-dot" style="background:rgba(196,127,24,.35);border:1.5px dashed var(--amber);"></span>Projected Remaining</span>
     </div>
- 
+
     <!-- Divider -->
     <div style="border-top:1px solid var(--border);margin:0 -24px 20px;"></div>
- 
+
     <!-- Yearly -->
     <div class="progress-header">
       <span class="progress-title">Yearly Budget</span>
@@ -683,7 +683,7 @@
       <span><span class="legend-dot" style="background:rgba(196,127,24,.35);border:1.5px dashed var(--amber);"></span>Projected Remaining</span>
     </div>
   </div>
- 
+
   <!-- Projection Settings -->
   <div class="proj-settings-bar" id="proj-settings-bar">
     <div class="proj-settings-inner">
@@ -703,7 +703,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- Category + Chart -->
   <div class="two-col">
     <div class="panel">
@@ -728,7 +728,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- Projections + Health -->
   <div class="two-col">
     <div class="panel">
@@ -742,7 +742,7 @@
       <div class="panel-body" id="health-panel"></div>
     </div>
   </div>
- 
+
   <!-- Add Expense -->
   <div class="section-label">Add New Expense</div>
   <div class="form-section">
@@ -780,7 +780,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- Expense Log -->
   <div class="section-label">Expense Log</div>
   <div class="log-section">
@@ -796,21 +796,21 @@
     </div>
     <div id="table-wrap"></div>
   </div>
- 
+
 </div><!-- /page-budget -->
- 
+
 <!-- Volunteer Page -->
 <div class="page" id="page-volunteers">
- 
+
   <!-- Vol KPI -->
   <div class="vol-kpi-grid" id="vol-kpi-grid"></div>
- 
+
   <!-- Vol Summary row -->
   <div class="panel" style="margin-bottom:24px;">
     <div class="panel-head"><h2>Monthly Summary</h2></div>
     <div class="panel-body" id="vol-monthly-panel"></div>
   </div>
- 
+
   <!-- Add Volunteer Entry -->
   <div class="section-label">Log Volunteer Day</div>
   <div class="form-section">
@@ -840,7 +840,7 @@
       </div>
     </div>
   </div>
- 
+
   <!-- Volunteer Log -->
   <div class="section-label">Volunteer Log</div>
   <div class="log-section">
@@ -853,9 +853,9 @@
     </div>
     <div id="vol-table-wrap"></div>
   </div>
- 
+
 </div><!-- /page-volunteers -->
- 
+
 <!-- Delete Modal -->
 <div class="modal-backdrop" id="del-modal">
   <div class="modal">
@@ -867,7 +867,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Volunteer Delete Modal -->
 <div class="modal-backdrop" id="vol-del-modal">
   <div class="modal">
@@ -879,7 +879,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Year Budget Modal -->
 <div class="modal-backdrop" id="yearbud-modal">
   <div class="modal">
@@ -893,7 +893,7 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Phase Budget Modal -->
 <div class="modal-backdrop" id="phase-budget-modal">
   <div class="modal" style="max-width:560px;">
@@ -907,11 +907,11 @@
     </div>
   </div>
 </div>
- 
+
 <!-- Budget modal removed - replaced by phase budget modal -->
- 
+
 <div class="toast" id="toast"></div>
- 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
 // Load jsPDF libraries dynamically on demand
@@ -934,35 +934,35 @@ function loadJsPDF(callback) {
 const TOTAL_BUDGET  = 500000;
 const PROJECT_START = new Date('2026-01-01');
 const PROJECT_END   = new Date('2028-12-31');
- 
+
 // ── 3-level hierarchy: Phase → Project → Cost Type ──────────────────
 const COST_TYPES   = ['Labor','Materials','Mechanicals','Admin/Management'];
 const PHASE_COLORS = ['#2b4560','#2a7a5a','#c47f18'];
- 
+
 const DEFAULT_PHASES = [
   {id:'phase1', name:'Phase 1: 473 Demo & Exterior Rebuild',        budget:170078},
   {id:'phase2', name:'Phase 2: Connection Addition & 473 Remodel',  budget:200000},
   {id:'phase3', name:'Phase 3: Remodel Church Building',            budget:129922},
 ];
- 
+
 // projects: { phase1: [{id:'proj_xxx', name:'Remodel Leased Space', budget:32500, costBudgets:{Labor:5000,...}}, ...], ... }
 let phases   = DEFAULT_PHASES.map(p=>({...p}));
 let projects = {phase1:[],phase2:[],phase3:[]};
- 
+
 // Legacy compat
 let CAT_COLORS = {};
 let categoryBudgets = {};
 let subcatBudgets = {};
- 
+
 let expenses = [];
 let yearBudgets = { 2026: 300000, 2027: 150000, 2028: 50000 };
 let deleteIndex = null;
 let chartInstance = null;
- 
+
 // ── API save/load ──
 let _saveTimer = null;
 let _dataLoaded = false;
- 
+
 function save() {
   if (!_dataLoaded) { console.warn('Save blocked — data not loaded yet.'); return; }
   clearTimeout(_saveTimer);
@@ -981,7 +981,7 @@ function save() {
       .catch(function(e){ console.error('Save error:', e); });
   }, 300);
 }
- 
+
 async function loadFromAPI() {
   try {
     const r = await fetch('/api/data', { credentials: 'include' });
@@ -991,10 +991,12 @@ async function loadFromAPI() {
     }
     const d = await r.json();
     if (d.ok && d.data) {
-      if (d.data.lb_expenses2)    expenses    = JSON.parse(d.data.lb_expenses2);
-      if (d.data.lb_year_budgets) yearBudgets = JSON.parse(d.data.lb_year_budgets);
-      if (d.data.lb_phases)       phases      = JSON.parse(d.data.lb_phases);
-      if (d.data.lb_projects)     projects    = JSON.parse(d.data.lb_projects);
+      function parseVal(v) { return typeof v === 'string' ? JSON.parse(v) : v; }
+      if (d.data.lb_expenses2)    expenses    = parseVal(d.data.lb_expenses2);
+      if (d.data.lb_year_budgets) yearBudgets = parseVal(d.data.lb_year_budgets);
+      if (d.data.lb_phases)       phases      = parseVal(d.data.lb_phases);
+      if (d.data.lb_projects)     projects    = parseVal(d.data.lb_projects);
+      if (d.data.lb_volunteers)   volunteers  = parseVal(d.data.lb_volunteers);
     }
     phases.forEach(function(ph){ if(!projects[ph.id]) projects[ph.id]=[]; });
     _dataLoaded = true;
@@ -1002,7 +1004,7 @@ async function loadFromAPI() {
     console.error('Load failed:', e);
   }
 }
- 
+
 function phaseSpent(phaseId) {
   return expenses.filter(function(e){ return e.phase===phaseId; }).reduce(function(s,e){ return s+e.amount; },0);
 }
@@ -1015,11 +1017,11 @@ function costTypeSpent(phaseId, projId, ct) {
 function genId() { return 'p' + Date.now() + Math.floor(Math.random()*1000); }
 function delProj(btn) { deleteProject(btn.dataset.phid, btn.dataset.prjid); }
 function addProj(btn) { addProject(btn.dataset.phid); }
- 
+
 const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
 const fmtD = n => '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 const pct  = (a,b) => b ? Math.round(a/b*100) : 0;
- 
+
 function totalSpent() { return expenses.reduce((s,e)=>s+e.amount,0); }
 function catSpent(c)  { return expenses.filter(e=>e.category===c).reduce((s,e)=>s+e.amount,0); }
 function projectDaysTotal() { return (PROJECT_END-PROJECT_START)/86400000; }
@@ -1028,14 +1030,14 @@ function daysSinceStart() {
   return Math.max(0,Math.min(d,projectDaysTotal()));
 }
 let projectionMode = 'frontloaded'; // linear | frontloaded | remaining | manual
- 
+
 const PROJ_DESCRIPTIONS = {
   linear: 'Assumes spending continues at the same daily rate for the entire project.',
   frontloaded: 'Accounts for higher early spending — uses recent months to estimate the remaining burn rate.',
   remaining: 'Assumes you will spend exactly the remaining budget balance.',
   manual: 'You specify how much you expect to spend for the rest of the project.'
 };
- 
+
 function setProjectionMode(mode) {
   projectionMode = mode;
   document.querySelectorAll('.proj-mode-btn').forEach(b => b.classList.remove('active'));
@@ -1044,27 +1046,27 @@ function setProjectionMode(mode) {
   document.getElementById('proj-mode-desc').textContent = PROJ_DESCRIPTIONS[mode];
   renderAll();
 }
- 
+
 function projectedTotal() {
   const spent = totalSpent();
   const elapsed = daysSinceStart();
   const totalDays = projectDaysTotal();
- 
+
   if (projectionMode === 'remaining') {
     return TOTAL_BUDGET; // spent + remaining = full budget
   }
- 
+
   if (projectionMode === 'manual') {
     const manualVal = parseFloat(document.getElementById('proj-manual-val')?.value);
     return spent + (isNaN(manualVal) ? 0 : manualVal);
   }
- 
+
   if (elapsed <= 0) return 0;
- 
+
   if (projectionMode === 'linear') {
     return spent / elapsed * totalDays;
   }
- 
+
   // Front-loaded: use only the most recent 60 days to estimate future burn
   if (projectionMode === 'frontloaded') {
     const today = new Date();
@@ -1076,10 +1078,10 @@ function projectedTotal() {
     const daysRemaining = totalDays - elapsed;
     return spent + (recentDailyRate * daysRemaining);
   }
- 
+
   return spent / elapsed * totalDays;
 }
- 
+
 function renderKPI() {
   const spent=totalSpent(), rem=TOTAL_BUDGET-spent, proj=projectedTotal();
   const elapsed=daysSinceStart(), total=projectDaysTotal();
@@ -1099,7 +1101,7 @@ function renderKPI() {
       <div class="kpi-sub">${c.sub}</div>
     </div>`).join('');
 }
- 
+
 function renderProgress() {
   // ── Overall bar ──
   const spent=totalSpent(), proj=projectedTotal();
@@ -1114,12 +1116,12 @@ function renderProgress() {
   document.getElementById('progress-pct').textContent=sp+'%';
   document.getElementById('progress-spent-label').textContent=fmt(spent)+' spent';
   document.getElementById('progress-proj-label').textContent=proj>0?'Proj: '+fmt(proj):'';
- 
+
   // ── Yearly bar ──
   const yrEl=document.getElementById('yr-select'); const yr=yrEl&&yrEl.value?parseInt(yrEl.value):2026;
   const yrBudget=yearBudgets[yr]||0;
   const yrSpent=expenses.filter(e=>new Date(e.date+'T00:00:00').getFullYear()===yr).reduce((s,e)=>s+e.amount,0);
- 
+
   // Yearly projection: if current year, extrapolate; if future, use overall daily rate
   const today=new Date();
   let yrProj=yrSpent;
@@ -1133,7 +1135,7 @@ function renderProgress() {
     const diy=(new Date(yr+1,0,1)-new Date(yr,0,1))/86400000;
     yrProj=dailyRate*diy;
   }
- 
+
   const ysp=yrBudget>0?Math.min(pct(yrSpent,yrBudget),100):0;
   const ypp=yrBudget>0?Math.min(pct(yrProj,yrBudget),100):0;
   const yrFill=document.getElementById('yr-progress-fill');
@@ -1147,9 +1149,9 @@ function renderProgress() {
   document.getElementById('yr-progress-proj-label').textContent=yrProj>0&&yrProj!==yrSpent?'Proj: '+fmt(Math.round(yrProj)):'';
   document.getElementById('yr-progress-budget-label').textContent=fmt(yrBudget)+' budget';
 }
- 
+
 // phaseSpent, projectSpent, costTypeSpent defined near save()
- 
+
 function renderCategories() {
   var rows = phases.map(function(ph, phIdx) {
     var phBudget = ph.budget || 0;
@@ -1159,14 +1161,14 @@ function renderCategories() {
     var phCls    = pp>90?'badge-red':pp>70?'badge-amber':'badge-green';
     var phTxt    = pp>90?'At Risk':pp>70?'Watch':'On Track';
     var phProjects = projects[ph.id] || [];
- 
+
     var projRows = phProjects.map(function(proj) {
       var prBudget = proj.budget || 0;
       var prSpent  = projectSpent(ph.id, proj.id);
       var prp      = Math.min(pct(prSpent, prBudget), 100);
       var prCls    = prp>90?'badge-red':prp>70?'badge-amber':'badge-green';
       var prTxt    = prp>90?'At Risk':prp>70?'Watch':'On Track';
- 
+
       var ctRows = COST_TYPES.map(function(ct) {
         var ctBudget = (proj.costBudgets||{})[ct] || 0;
         var ctSpent  = costTypeSpent(ph.id, proj.id, ct);
@@ -1185,7 +1187,7 @@ function renderCategories() {
              + '<div class="cat-bar-fill" style="width:' + ctp + '%;background:' + phColor + ';opacity:.4;"></div>'
              + '</div></div>';
       }).join('');
- 
+
       return '<div class="proj-block">'
            + '<div class="phase-header" data-phaseid="' + ph.id + '" data-projid="' + proj.id + '" onclick="toggleProject(this.dataset.phaseid,this.dataset.projid)" style="cursor:pointer;padding-left:20px;">'
            + '<div style="display:flex;align-items:center;gap:8px;">'
@@ -1202,11 +1204,11 @@ function renderCategories() {
            + '<div id="ctrows-' + proj.id + '" style="display:none;">' + ctRows + '</div>'
            + '</div>';
     }).join('');
- 
+
     var emptyMsg = phProjects.length===0
       ? '<div style="padding:10px 16px;font-size:.82rem;color:var(--text-muted);font-style:italic;">No projects yet — add one via Edit Phase Budgets</div>'
       : '';
- 
+
     return '<div class="phase-block" id="phblock-' + ph.id + '">'
          + '<div class="phase-header" data-phaseid="' + ph.id + '" onclick="togglePhase(this.dataset.phaseid)" style="cursor:pointer;">'
          + '<div style="display:flex;align-items:center;gap:8px;">'
@@ -1226,7 +1228,7 @@ function renderCategories() {
   }).join('');
   document.getElementById('cat-breakdown').innerHTML = rows;
 }
- 
+
 function toggleProject(phId, projId) {
   var el  = document.getElementById('ctrows-' + projId);
   var tog = document.getElementById('ptoggle-' + projId);
@@ -1242,9 +1244,9 @@ function togglePhase(id) {
   el.style.display = open ? 'block' : 'none';
   toggle.style.transform = open ? 'rotate(90deg)' : '';
 }
- 
+
 const MONTH_NAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
- 
+
 function getChartData() {
   if(!expenses.length) return {labels:[],data:[]};
   const yrSel = document.getElementById('chart-year-select'); const filterYr = (yrSel && yrSel.value) ? yrSel.value : 'all';
@@ -1260,7 +1262,7 @@ function getChartData() {
   const sorted=Object.keys(buckets).sort();
   return{labels:sorted.map(k=>keyToLabel[k]),data:sorted.map(k=>buckets[k])};
 }
- 
+
 function renderChart() {
   const ctx=document.getElementById('spendChart').getContext('2d');
   const{labels,data}=getChartData();
@@ -1283,7 +1285,7 @@ function renderChart() {
     }
   });
 }
- 
+
 function renderProjections() {
   const years=[2026,2027,2028];
   const rows=years.map(yr=>{
@@ -1315,7 +1317,7 @@ function renderProjections() {
     <tr><td>Total</td><td>${fmt(TOTAL_BUDGET)}</td><td>${fmt(ts)}</td><td>${fmt(Math.round(tp))}</td><td>${totalDiffStr}</td></tr>
     </tbody>`;
 }
- 
+
 function renderHealth() {
   const spent=totalSpent(),proj=projectedTotal();
   const elapsed=daysSinceStart(),total=projectDaysTotal();
@@ -1337,7 +1339,7 @@ function renderHealth() {
       <span class="health-val" style="color:${i.c};">${i.v}</span>
     </div>`).join('');
 }
- 
+
 function renderTable() {
   const searchEl=document.getElementById('search-inp');
   const search=searchEl?searchEl.value.toLowerCase():'';
@@ -1355,28 +1357,28 @@ function renderTable() {
   var filterPhaseEl = document.getElementById('filter-phase');
   var filterPhaseVal = filterPhaseEl ? filterPhaseEl.value : '';
   if (filterPhaseVal) filtered = filtered.filter(function(e){ return e.phase===filterPhaseVal; });
- 
+
   var rows = filtered.map(function(e) {
     var phProjs = projects[e.phase] || [];
- 
+
     var phOpts = phases.map(function(p){
       return '<option value="' + p.id + '"' + (p.id===e.phase?' selected':'') + '>' + p.name.replace(/Phase \d+: /,'') + '</option>';
     }).join('');
- 
+
     var prOpts = phProjs.length
       ? phProjs.map(function(p){
           return '<option value="' + p.id + '"' + (p.id===e.project?' selected':'') + '>' + p.name + '</option>';
         }).join('')
       : '<option value="">—</option>';
- 
+
     var ctOpts = COST_TYPES.map(function(ct){
       return '<option value="' + ct + '"' + (ct===e.costType?' selected':'') + '>' + ct + '</option>';
     }).join('');
- 
+
     var idx     = e._idx;
     var dateFmt = e.date.split('-').slice(1).concat(e.date.split('-')[0]).join('/');
     var ss      = 'border:1.5px solid var(--border);border-radius:5px;padding:3px 5px;font-size:.76rem;background:var(--off-white);color:var(--navy);';
- 
+
     return '<tr>'
       + '<td>' + dateFmt + '</td>'
       + '<td style="font-weight:500;">' + e.description + '</td>'
@@ -1394,7 +1396,7 @@ function renderTable() {
     + '<tbody>' + rows + '</tbody>'
     + '</table>';
 }
- 
+
 function addExpense() {
   var dateEl    = document.getElementById('inp-date');
   var descEl    = document.getElementById('inp-desc');
@@ -1423,11 +1425,11 @@ function addExpense() {
   if(amountEl) amountEl.value='';
   showToast('Expense added successfully!');
 }
- 
+
 function openDelModal(i)  {deleteIndex=i;document.getElementById('del-modal').classList.add('open');}
 function closeDelModal()  {deleteIndex=null;document.getElementById('del-modal').classList.remove('open');}
 function confirmDelete()  {if(deleteIndex!==null){expenses.splice(deleteIndex,1);save();renderAll();}closeDelModal();showToast('Expense deleted.');}
- 
+
 function expFieldChange(sel) {
   changeExpenseField(+sel.dataset.idx, sel.dataset.fld, sel.value);
 }
@@ -1444,7 +1446,7 @@ function changeExpenseField(idx, field, val) {
 }
 // Legacy alias
 function changeExpensePhase(idx, field, val) { changeExpenseField(idx, field, val); }
- 
+
 function openYearBudgetModal() {
   const fields = [2026, 2027, 2028].map(yr => `
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
@@ -1471,9 +1473,9 @@ function saveYearBudgets() {
   });
   save(); closeYearBudgetModal(); renderAll(); showToast('Year budgets updated!');
 }
- 
+
 const sortCats = cats => [...cats].sort((a,b) => a==='Other' ? 1 : b==='Other' ? -1 : a.localeCompare(b));
- 
+
 function renderCategorySelects() {
   try {
     var phSel = document.getElementById('inp-phase');
@@ -1514,28 +1516,28 @@ function updateCostTypeSelect() {
 }
 // Legacy stubs
 function updateSubcatSelect() { updateProjectSelect(); }
- 
+
 function openCatModal() {
   openPhaseBudgetModal();
 }
 function closeCatModal() {
   closePhaseBudgetModal();
 }
- 
+
 function renderCatModalList() {
   // No longer used — categories replaced by phases
 }
- 
+
 function deleteCategory(cat) {
   // Categories are now phase/subcategory structure — use Edit Phase Budgets
   showToast('Use "Edit Phase Budgets" to manage categories.');
 }
- 
+
 function addCategory() {
   // Categories are now phases — use openPhaseBudgetModal instead
   openPhaseBudgetModal();
 }
- 
+
 function openBudgetModal() {
   const f=Object.keys(categoryBudgets).map(cat=>`
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
@@ -1556,7 +1558,7 @@ function saveBudgets(){
   Object.keys(categoryBudgets).forEach(c=>{const v=parseFloat(document.getElementById('bud-'+c)?.value);if(!isNaN(v))categoryBudgets[c]=v;});
   save();closeBudgetModal();renderAll();showToast('Budgets updated!');
 }
- 
+
 function exportCSV(){
   if(!expenses.length){showToast('No expenses to export.');return;}
   const h='Date,Description,Category,Vendor,Period,Amount\n';
@@ -1564,19 +1566,19 @@ function exportCSV(){
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h+r],{type:'text/csv'}));
   a.download='lifebridge_renovation_expenses.csv';a.click();
 }
- 
+
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
- 
+
 // ══════════════════════════════════════════
 // VOLUNTEER TRACKER
 // ══════════════════════════════════════════
 let volunteers = [];
 let volDeleteIndex = null;
- 
+
 function saveVol() {
   if (!_dataLoaded) { console.warn('Save blocked — data not loaded yet.'); return; }
   clearTimeout(_saveTimer);
@@ -1590,7 +1592,7 @@ function saveVol() {
       .catch(function(e){ console.error('SaveVol error:', e); });
   }, 300);
 }
- 
+
 function switchPage(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -1600,10 +1602,10 @@ function switchPage(page) {
   });
   if (page === 'volunteers') renderVolAll();
 }
- 
+
 function totalVolHours() { return volunteers.reduce((s,v) => s + (v.people * v.hours), 0); }
 function totalVolSavings() { return volunteers.reduce((s,v) => s + (v.people * v.hours * v.rate), 0); }
- 
+
 function renderVolKPI() {
   const totalHrs = totalVolHours();
   const totalSav = totalVolSavings();
@@ -1623,7 +1625,7 @@ function renderVolKPI() {
       <div class="kpi-sub">${c.sub}</div>
     </div>`).join('');
 }
- 
+
 function renderVolMonthly() {
   if (!volunteers.length) {
     document.getElementById('vol-monthly-panel').innerHTML = '<div class="empty-state">No entries yet.</div>';
@@ -1655,7 +1657,7 @@ function renderVolMonthly() {
     '</div>';
   }).join('');
 }
- 
+
 function renderVolTable() {
   const search = document.getElementById('vol-search')?.value.toLowerCase() || '';
   let filtered = volunteers.map(function(v,i){ return Object.assign({},v,{_idx:i}); }).filter(function(v) {
@@ -1696,7 +1698,7 @@ function renderVolTable() {
     '<tbody>' + rows + '</tbody>' +
     '</table>';
 }
- 
+
 function addVolEntry() {
   const date   = document.getElementById('vol-date').value;
   const people = parseInt(document.getElementById('vol-people').value);
@@ -1714,11 +1716,11 @@ function addVolEntry() {
   document.getElementById('vol-notes').value = '';
   showToast('Day logged!');
 }
- 
+
 function openVolDelModal(i)  { volDeleteIndex=i; document.getElementById('vol-del-modal').classList.add('open'); }
 function closeVolDelModal()  { volDeleteIndex=null; document.getElementById('vol-del-modal').classList.remove('open'); }
 function confirmVolDelete()  { if(volDeleteIndex!==null){volunteers.splice(volDeleteIndex,1);saveVol();renderVolAll();} closeVolDelModal(); showToast('Entry deleted.'); }
- 
+
 function exportVolCSV() {
   if (!volunteers.length) { showToast('No entries to export.'); return; }
   const rows = ['Date,People,HoursPerPerson,TotalHours,Rate,ValueSaved,Notes'];
@@ -1732,9 +1734,9 @@ function exportVolCSV() {
   a.download = 'lifebridge_volunteers.csv';
   a.click();
 }
- 
+
 function renderVolAll() { renderVolKPI(); renderVolMonthly(); renderVolTable(); }
- 
+
 function exportDataJSON() {
   const btn = document.getElementById('pdf-btn');
   btn.textContent = 'Loading...';
@@ -1753,7 +1755,7 @@ function exportDataJSON() {
     }, 100);
   });
 }
- 
+
 function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'letter' });
@@ -1777,7 +1779,7 @@ function generatePDF() {
   const WHITE     = [255, 255, 255];
   const TEXT      = [26, 44, 61];
   const TOTAL_BUDGET = 500000;
- 
+
   function phaseSpent(phaseId) {
   return expenses.filter(function(e){ return e.phase===phaseId; }).reduce(function(s,e){ return s+e.amount; },0);
 }
@@ -1790,7 +1792,7 @@ function costTypeSpent(phaseId, projId, ct) {
 function genId() { return 'p' + Date.now() + Math.floor(Math.random()*1000); }
 function delProj(btn) { deleteProject(btn.dataset.phid, btn.dataset.prjid); }
 function addProj(btn) { addProject(btn.dataset.phid); }
- 
+
 const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
   const fmt2 = n => '$' + Number(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const fmtH = n => Number(n).toLocaleString('en-US', {maximumFractionDigits:1});
@@ -1804,10 +1806,10 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
   const yrSpent    = yr => expenses.filter(e=>new Date(e.date+'T00:00:00').getFullYear()===yr).reduce((s,e)=>s+e.amount,0);
   const totalVolHrs = () => volunteers.reduce((s,v)=>s+(v.people*v.hours),0);
   const totalVolSav = () => volunteers.reduce((s,v)=>s+(v.people*v.hours*v.rate),0);
- 
+
   let y = MT;
   let pageNum = 0;
- 
+
   // ── Header & Footer ──────────────────────────────────────────────
   function drawHeaderFooter(isFirst) {
     pageNum++;
@@ -1840,17 +1842,17 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     doc.text('LifeBridge Church Renovation Tracker  \u00b7  Confidential', PW/2, PH - 10, {align:'center'});
     doc.text('Page ' + pageNum, PW - MR, PH - 10, {align:'right'});
   }
- 
+
   function newPage() {
     doc.addPage();
     drawHeaderFooter(false);
     y = MT;
   }
- 
+
   function checkY(needed) {
     if (y + needed > PH - MB - 30) newPage();
   }
- 
+
   // ── Drawing helpers ──────────────────────────────────────────────
   function panelHeader(title) {
     checkY(22);
@@ -1862,7 +1864,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     doc.text(title.toUpperCase(), ML + 10, y + 14);
     y += 22;
   }
- 
+
   function sectionTitle(title) {
     checkY(22);
     doc.setFont('helvetica','bold');
@@ -1875,7 +1877,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     doc.line(ML, y, ML + CW, y);
     y += 8;
   }
- 
+
   function progressBar(spent, total, barY, barH, width) {
     const bw = width || CW;
     const sp = total > 0 ? Math.min(spent/total, 1) : 0;
@@ -1887,7 +1889,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
       doc.roundedRect(ML, barY, sp * bw, barH, 2, 2, 'F');
     }
   }
- 
+
   function kpiCards(cards) {
     checkY(60);
     const n = cards.length;
@@ -1921,27 +1923,27 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     });
     y += 66;
   }
- 
+
   // ── Logo ─────────────────────────────────────────────────────────
   const LOGO_DATA = document.querySelector('.logo-wrap img').src;
- 
+
   // ════════════════════════════════════════════════════════════════
   // PAGE 1 — BUDGET OVERVIEW
   // ════════════════════════════════════════════════════════════════
   drawHeaderFooter(true);
- 
+
   sectionTitle('Budget Overview');
- 
+
   const spent = totalSpent();
   const remaining = TOTAL_BUDGET - spent;
- 
+
   kpiCards([
     {label:'Total Budget', value:fmt(TOTAL_BUDGET), sub:'2026 – 2028', hi:true},
     {label:'Total Spent',  value:fmt(spent),        sub:pct(spent,TOTAL_BUDGET)+'% of budget', hi:false},
     {label:'Remaining',    value:fmt(remaining),    sub:remaining>=0?'Available':'Over budget', hi:false},
     {label:'# Expenses',   value:expenses.length,   sub:'entries logged', hi:false},
   ]);
- 
+
   // Overall progress
   panelHeader('Overall Budget Usage');
   y += 8;
@@ -1952,7 +1954,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
   doc.text(fmt(spent) + ' spent', ML + CW/2, y, {align:'center'});
   doc.text('$500,000', ML + CW, y, {align:'right'});
   y += 16;
- 
+
   // Yearly progress
   panelHeader('Yearly Budget Progress');
   y += 8;
@@ -1967,7 +1969,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     y += 16;
   });
   y += 6;
- 
+
   // ── Category Breakdown ─────────────────────────────────────────
   panelHeader('Category Breakdown');
   y += 6;
@@ -2005,12 +2007,12 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     y += 22;
   });
   y += 8;
- 
+
   // ── Projection Table ───────────────────────────────────────────
   checkY(120);
   panelHeader('Year-by-Year Projection');
   y += 6;
- 
+
   const projHead = [['Year','Year Budget','Actual Spent','Projected','vs Budget']];
   const projBody = [2026,2027,2028].map(yr => {
     const yb = yearBudgets[yr] || 0;
@@ -2021,7 +2023,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
   });
   const tDiff = spent - TOTAL_BUDGET;
   projBody.push(['Total', fmt(TOTAL_BUDGET), fmt(spent), fmt(spent), tDiff===0?'—':(tDiff>0?'+'+fmt(tDiff):fmt(tDiff))]);
- 
+
   doc.autoTable({
     startY: y,
     head: projHead,
@@ -2052,13 +2054,13 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     theme: 'grid'
   });
   y = doc.lastAutoTable.finalY + 10;
- 
+
   // ════════════════════════════════════════════════════════════════
   // PAGE 2 — EXPENSE LOG
   // ════════════════════════════════════════════════════════════════
   newPage();
   sectionTitle('Expense Log');
- 
+
   if (!expenses.length) {
     doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor(...MUTED);
     doc.text('No expenses have been logged yet.', ML, y + 12);
@@ -2089,29 +2091,29 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     });
     y = doc.lastAutoTable.finalY + 10;
   }
- 
+
   // ════════════════════════════════════════════════════════════════
   // PAGE 3 — VOLUNTEERS
   // ════════════════════════════════════════════════════════════════
   newPage();
   sectionTitle('Volunteer Overview');
- 
+
   const totalDays = volunteers.length;
   const totalPeople = volunteers.reduce((s,v)=>s+v.people,0);
   const totalHrs = totalVolHrs();
   const totalSav = totalVolSav();
- 
+
   kpiCards([
     {label:'Volunteer Days', value:totalDays,            sub:'days logged', hi:true},
     {label:'Total People',   value:totalPeople,          sub:'person appearances', hi:false},
     {label:'Total Hours',    value:fmtH(totalHrs),       sub:'combined hours', hi:false},
     {label:'Value Saved',    value:fmt(totalSav),        sub:'est. labor value', hi:true},
   ]);
- 
+
   // Monthly summary
   panelHeader('Monthly Summary');
   y += 8;
- 
+
   if (volunteers.length) {
     const months = {};
     volunteers.forEach(v => {
@@ -2147,12 +2149,12 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     doc.text('No volunteer days have been logged yet.', ML, y + 12);
   }
   y += 8;
- 
+
   // Volunteer log table
   checkY(60);
   panelHeader('Volunteer Log');
   y += 6;
- 
+
   if (!volunteers.length) {
     doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor(...MUTED);
     doc.text('No entries logged yet.', ML, y + 12);
@@ -2191,22 +2193,22 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
       showHead: 'everyPage'
     });
   }
- 
+
   // Save
   doc.save('LifeBridge-Renovation-Report.pdf');
 }
- 
+
 function openPhaseBudgetModal() {
   renderPhaseBudgetFields();
   updatePhaseBudgetTotal();
   document.getElementById('phase-budget-modal').classList.add('open');
 }
- 
+
 function renderPhaseBudgetFields() {
   var html = phases.map(function(ph, i) {
     var phColor  = PHASE_COLORS[i] || '#2b4560';
     var phProjs  = projects[ph.id] || [];
- 
+
     var projRows = phProjs.map(function(proj, pi) {
       var ctFields = COST_TYPES.map(function(ct) {
         var val = (proj.costBudgets||{})[ct] || 0;
@@ -2217,7 +2219,7 @@ function renderPhaseBudgetFields() {
              + ' oninput="updatePhaseBudgetTotal()" style="width:110px;padding:4px 7px;font-size:.8rem;">'
              + '</div>';
       }).join('');
- 
+
       var projBudInputId = 'projbud-' + proj.id;
       return '<div style="margin:6px 0 6px 16px;padding:8px;background:var(--ice-pale);border-radius:7px;">'
            + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
@@ -2231,7 +2233,7 @@ function renderPhaseBudgetFields() {
            + ctFields
            + '</div>';
     }).join('');
- 
+
     return '<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--border);">'
          + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">'
          + '<span style="font-weight:700;font-size:.9rem;color:var(--navy);">' + ph.name + '</span>'
@@ -2248,11 +2250,11 @@ function renderPhaseBudgetFields() {
   }).join('');
   document.getElementById('phase-budget-fields').innerHTML = html;
 }
- 
+
 function closePhaseBudgetModal() {
   document.getElementById('phase-budget-modal').classList.remove('open');
 }
- 
+
 function addProject(phaseId) {
   var inp  = document.getElementById('newproj-' + phaseId);
   if (!inp || !inp.value.trim()) { showToast('Enter a project name.'); return; }
@@ -2265,7 +2267,7 @@ function addProject(phaseId) {
   renderCategorySelects();
   showToast('"' + name + '" added!');
 }
- 
+
 function deleteProject(phaseId, projId) {
   var phProjs = projects[phaseId] || [];
   var hasExp  = expenses.some(function(e){ return e.phase===phaseId && e.project===projId; });
@@ -2277,7 +2279,7 @@ function deleteProject(phaseId, projId) {
   renderCategorySelects();
   showToast('Project deleted.');
 }
- 
+
 function updatePhaseBudgetTotal() {
   var total = 0;
   phases.forEach(function(ph) {
@@ -2287,7 +2289,7 @@ function updatePhaseBudgetTotal() {
   var el = document.getElementById('phase-budget-grand-total');
   if (el) el.textContent = fmt(total) + (Math.abs(total-TOTAL_BUDGET)>1?' — ⚠ should equal $500,000':'');
 }
- 
+
 function savePhaseBudgets() {
   phases.forEach(function(ph) {
     var phEl = document.getElementById('phbud-' + ph.id);
@@ -2306,20 +2308,20 @@ function savePhaseBudgets() {
   });
   save(); closePhaseBudgetModal(); renderAll(); showToast('Budgets saved!');
 }
- 
+
 // Stub out old functions that may still be called
 function openCatModal()    { openPhaseBudgetModal(); }
 function renderCatList()   { /* no-op: replaced by phase structure */ }
 function closeCatModal()   { closePhaseBudgetModal(); }
 function openBudgetModal() { openPhaseBudgetModal(); }
 function closeBudgetModal(){ closePhaseBudgetModal(); }
- 
+
 function renderAll(){renderKPI();renderProgress();renderCategories();renderChart();renderProjections();renderHealth();renderTable();renderCategorySelects();}
- 
+
 document.getElementById('inp-date').value=new Date().toISOString().slice(0,10);
 document.getElementById('vol-date').value=new Date().toISOString().slice(0,10);
 document.getElementById('vol-rate').value=25;
- 
+
 // Load data from API then render
 loadFromAPI().then(function() {
   renderAll();
