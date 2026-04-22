@@ -6,7 +6,7 @@ const pgSession = require('connect-pg-simple')(session);
 const path = require('path');
 
 const app = express();
-app.set('trust proxy', 1); // Required for secure cookies behind Railway's proxy
+app.set('trust proxy', 1);
 
 const PORT = process.env.PORT || 3000;
 
@@ -44,19 +44,11 @@ async function checkPassword(input) {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
-  store: new pgSession({
-    pool,
-    tableName: 'session',
-    createTableIfMissing: true
-  }),
+  store: new pgSession({ pool, tableName: 'session', createTableIfMissing: true }),
   secret: process.env.SESSION_SECRET || 'lifebridge-secret-2026',
   resave: false,
   saveUninitialized: false,
-  cookie: {
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    secure: false,
-    sameSite: 'lax'
-  }
+  cookie: { maxAge: 7 * 24 * 60 * 60 * 1000, secure: false, sameSite: 'lax' }
 }));
 
 app.get('/login', (req, res) => {
@@ -78,6 +70,12 @@ app.post('/login', async (req, res) => {
   } else {
     res.redirect('/login?error=1');
   }
+});
+
+app.get('/logout', (req, res) => {
+  req.session.destroy(() => {
+    res.redirect('/login');
+  });
 });
 
 app.get('/', requireAuth, (req, res) => {
