@@ -13,7 +13,7 @@ const DEFPASS='lifebridge';
 async function checkPassword(input){ const s=process.env.APP_PASSWORD||DEFPASS; if(s.startsWith('$2'))return bcrypt.compare(input,s); return input===s; }
 app.use(express.json({limit:'10mb'}));
 app.use(express.urlencoded({extended:true}));
-app.use(session({store:new pgSession({pool,tableName:'session'}),secret:process.env.SESSION_SECRET||'lifebridge-secret-2026',resave:false,saveUninitialized:false,cookie:{maxAge:7*24*60*60*1000,secure:process.env.NODE_ENV==='production'}}));
+app.use(session({store:new pgSession({pool,tableName:'session',createTableIfMissing:true}),secret:process.env.SESSION_SECRET||'lifebridge-secret-2026',resave:false,saveUninitialized:false,cookie:{maxAge:7*24*60*60*1000,secure:process.env.NODE_ENV==='production'}}));
 app.get('/login',(req,res)=>{ if(req.session.authenticated)return res.redirect('/'); res.sendFile(path.join(__dirname,'public','login.html')); });
 app.post('/login',async(req,res)=>{ const {password}=req.body; console.log('Login attempt:', password); const ok=await checkPassword(password); console.log('Password check result:', ok); if(ok){ req.session.authenticated=true; res.redirect('/'); }else{ res.redirect('/login?error=1'); } });
 
