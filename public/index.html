@@ -832,8 +832,8 @@
         <input type="number" id="vol-hours" placeholder="e.g. 4" min="0" step="0.5">
       </div>
       <div class="form-group">
-        <label>Est. Hourly Value ($)</label>
-        <input type="number" id="vol-rate" placeholder="e.g. 25" min="0" step="1">
+        <label>Total Savings Value ($)</label>
+        <input type="number" id="vol-rate" placeholder="e.g. 500" min="0" step="1">
       </div>
       <div class="form-group">
         <label>Notes / Task Description</label>
@@ -1619,7 +1619,7 @@ function switchPage(page) {
 }
 
 function totalVolHours() { return volunteers.reduce((s,v) => s + (v.people * v.hours), 0); }
-function totalVolSavings() { return volunteers.reduce((s,v) => s + (v.people * v.hours * v.rate), 0); }
+function totalVolSavings() { return volunteers.reduce((s,v) => s + (v.rate || 0), 0); }
 
 function renderVolKPI() {
   const totalHrs = totalVolHours();
@@ -1655,7 +1655,7 @@ function renderVolMonthly() {
     months[key].days++;
     months[key].people += v.people;
     months[key].hours += v.people * v.hours;
-    months[key].savings += v.people * v.hours * v.rate;
+    months[key].savings += (v.rate || 0);
   });
   const sorted = Object.keys(months).sort().map(function(k){ return months[k]; });
   const maxHrs = Math.max.apply(null, sorted.map(function(m){ return m.hours; }));
@@ -1685,14 +1685,13 @@ function renderVolTable() {
   }
   const rows = filtered.map(function(v) {
     const totalHrs = v.people * v.hours;
-    const valueSaved = v.people * v.hours * v.rate;
+    const valueSaved = (v.rate || 0);
     const dateFmt = v.date.split('-').slice(1).concat(v.date.split('-')[0]).join('/');
     return '<tr>' +
       '<td>' + dateFmt + '</td>' +
       '<td style="text-align:center;font-weight:700;color:var(--navy);">' + v.people + '</td>' +
       '<td style="text-align:right;">' + v.hours.toLocaleString('en-US',{maximumFractionDigits:1}) + ' hrs</td>' +
       '<td style="text-align:right;font-weight:700;color:var(--navy);">' + totalHrs.toLocaleString('en-US',{maximumFractionDigits:1}) + '</td>' +
-      '<td style="text-align:right;">$' + v.rate.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}) + '/hr</td>' +
       '<td style="font-weight:700;color:var(--green);">' + fmt(valueSaved) + '</td>' +
       '<td style="color:var(--text-muted);font-size:.82rem;">' + (v.notes||'—') + '</td>' +
       '<td><button class="btn-icon" onclick="openVolDelModal(' + v._idx + ')">🗑</button></td>' +
@@ -1705,8 +1704,7 @@ function renderVolTable() {
       '<th style="text-align:center;"># People</th>' +
       '<th style="text-align:right;">Hrs/Person</th>' +
       '<th style="text-align:right;">Total Hrs</th>' +
-      '<th style="text-align:right;">Rate</th>' +
-      '<th>Value Saved</th>' +
+      '<th>Savings Value</th>' +
       '<th>Notes</th>' +
       '<th>Actions</th>' +
     '</tr></thead>' +
@@ -1721,7 +1719,7 @@ function addVolEntry() {
   const rate   = parseFloat(document.getElementById('vol-rate').value);
   const notes  = document.getElementById('vol-notes').value.trim();
   if (!date || isNaN(people) || people < 1 || isNaN(hours) || hours <= 0 || isNaN(rate) || rate < 0) {
-    showToast('Please fill in Date, # of Volunteers, Hours, and Rate.'); return;
+    showToast('Please fill in Date, # of Volunteers, and Hours.'); return;
   }
   volunteers.push({ date: date, people: people, hours: hours, rate: rate, notes: notes });
   volunteers.sort(function(a,b){ return a.date < b.date ? 1 : -1; });
@@ -1738,11 +1736,11 @@ function confirmVolDelete()  { if(volDeleteIndex!==null){volunteers.splice(volDe
 
 function exportVolCSV() {
   if (!volunteers.length) { showToast('No entries to export.'); return; }
-  const rows = ['Date,People,HoursPerPerson,TotalHours,Rate,ValueSaved,Notes'];
+  const rows = ['Date,People,HoursPerPerson,TotalHours,SavingsValue,Notes'];
   volunteers.forEach(function(v) {
     const totalHrs = v.people * v.hours;
-    const valueSaved = (v.people * v.hours * v.rate).toFixed(2);
-    rows.push(v.date + ',' + v.people + ',' + v.hours + ',' + totalHrs + ',' + v.rate + ',' + valueSaved + ',"' + (v.notes||'') + '"');
+    const valueSaved = (v.rate || 0).toFixed(2);
+    rows.push(v.date + ',' + v.people + ',' + v.hours + ',' + totalHrs + ',' + valueSaved + ',"' + (v.notes||'') + '"');
   });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([rows.join('\n')], {type:'text/csv'}));
@@ -1820,7 +1818,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
   const catSpent   = c  => expenses.filter(e=>e.category===c).reduce((s,e)=>s+e.amount,0);
   const yrSpent    = yr => expenses.filter(e=>new Date(e.date+'T00:00:00').getFullYear()===yr).reduce((s,e)=>s+e.amount,0);
   const totalVolHrs = () => volunteers.reduce((s,v)=>s+(v.people*v.hours),0);
-  const totalVolSav = () => volunteers.reduce((s,v)=>s+(v.people*v.hours*v.rate),0);
+  const totalVolSav = () => volunteers.reduce((s,v)=>s+(v.rate||0),0);
 
   let y = MT;
   let pageNum = 0;
@@ -2137,7 +2135,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
       months[key].days++;
       months[key].people += v.people;
       months[key].hours  += v.people * v.hours;
-      months[key].savings+= v.people * v.hours * v.rate;
+      months[key].savings+= (v.rate || 0);
     });
     const maxHrs = Math.max(...Object.values(months).map(m=>m.hours));
     Object.keys(months).sort().forEach(key => {
@@ -2174,7 +2172,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
     doc.setFont('helvetica','italic'); doc.setFontSize(8.5); doc.setTextColor(...MUTED);
     doc.text('No entries logged yet.', ML, y + 12);
   } else {
-    const volHead = [['Date','# People','Hrs/Person','Total Hrs','Rate','Value Saved','Notes']];
+    const volHead = [['Date','# People','Hrs/Person','Total Hrs','Savings Value','Notes']];
     const volBody = [...volunteers]
       .sort((a,b) => a.date < b.date ? 1 : -1)
       .map(v => [
@@ -2182,8 +2180,7 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
         String(v.people),
         fmtH(v.hours),
         fmtH(v.people * v.hours),
-        '$' + v.rate + '/hr',
-        fmt(v.people * v.hours * v.rate),
+        fmt(v.rate || 0),
         v.notes || '—'
       ]);
     doc.autoTable({
@@ -2200,9 +2197,8 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
         1:{cellWidth:48, halign:'center'},
         2:{cellWidth:58, halign:'right'},
         3:{cellWidth:58, halign:'right', fontStyle:'bold'},
-        4:{cellWidth:50, halign:'right'},
-        5:{cellWidth:68, halign:'right', fontStyle:'bold', textColor:GREEN},
-        6:{cellWidth:203}
+        4:{cellWidth:80, halign:'right', fontStyle:'bold', textColor:GREEN},
+        5:{cellWidth:241}
       },
       theme: 'grid',
       showHead: 'everyPage'
@@ -2335,7 +2331,7 @@ function renderAll(){renderKPI();renderProgress();renderCategories();renderChart
 
 document.getElementById('inp-date').value=new Date().toISOString().slice(0,10);
 document.getElementById('vol-date').value=new Date().toISOString().slice(0,10);
-document.getElementById('vol-rate').value=25;
+document.getElementById('vol-rate').value='';
 
 // Load data from API then render
 loadFromAPI().then(function() {
