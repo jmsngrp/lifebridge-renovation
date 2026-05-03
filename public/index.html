@@ -618,14 +618,19 @@
 
 <div class="nav-tabs" style="display:flex;justify-content:space-between;align-items:center;padding-right:20px;">
   <div style="display:flex;">
-    <button class="nav-tab" onclick="switchPage('overview')">Overview</button>
-    <button class="nav-tab active" onclick="switchPage('budget')">Budget</button>
-    <button class="nav-tab" onclick="switchPage('volunteers')">Volunteers</button>
+    <button class="nav-tab" id="tab-overview" onclick="switchPage('overview')">Building Project Details</button>
+    <button class="nav-tab active admin-tab" id="tab-budget" onclick="switchPage('budget')">Budget</button>
+    <button class="nav-tab admin-tab" id="tab-volunteers" onclick="switchPage('volunteers')">Volunteers</button>
   </div>
   <div style="display:flex;align-items:center;gap:10px;">
     <span id="save-indicator" style="font-size:.72rem;color:var(--ice);opacity:0;transition:opacity .4s;font-family:'Montserrat',sans-serif;letter-spacing:.05em;"></span>
     <button onclick="exportDataJSON()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;" title="Generate PDF Report" id="pdf-btn">⬇ PDF Report</button>
-    <a href="/logout" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:'Montserrat',sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;text-decoration:none;">Sign Out</a>
+    <span id="save-indicator" style="font-size:.72rem;color:var(--ice);opacity:0;transition:opacity .4s;font-family:Montserrat,sans-serif;letter-spacing:.05em;"></span>
+    <button onclick="exportDataJSON()" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:Montserrat,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;" title="Generate PDF Report" id="pdf-btn">⬇ PDF Report</button>
+    <button onclick="openNotifyModal()" id="notify-btn" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:Montserrat,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;">📢 Notify</button>
+    <button onclick="openWebhookModal()" id="webhook-btn" style="display:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:Montserrat,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;">⚙ Webhook</button>
+    <button onclick="openAdminLoginModal()" id="admin-btn" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:Montserrat,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;" id="admin-login-btn">⚙ Admin</button>
+    <a href="/logout" id="signout-btn" style="display:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--ice);border-radius:6px;padding:5px 14px;font-family:Montserrat,sans-serif;font-size:.72rem;font-weight:600;letter-spacing:.05em;cursor:pointer;text-transform:uppercase;text-decoration:none;">Sign Out</a>
   </div>
 </div>
 
@@ -673,114 +678,36 @@
 </div><!-- /page-overview -->
 
 <div class="page active" id="page-budget">
+
   <!-- KPI Cards -->
   <div class="kpi-grid" id="kpi-grid"></div>
 
-  <!-- Progress Bars -->
+  <!-- Overall + Phase Progress -->
   <div class="progress-section">
-    <!-- Overall -->
     <div class="progress-header">
-      <span class="progress-title">Overall Budget &nbsp;<span style="font-weight:400;opacity:.7;font-size:.78rem;">$500,000 total</span></span>
+      <span class="progress-title">Overall Budget &nbsp;<span style="font-weight:400;opacity:.7;font-size:.78rem;" id="total-budget-label"></span></span>
       <span class="progress-pct" id="progress-pct"></span>
     </div>
     <div class="progress-track">
       <div class="progress-fill good" id="progress-fill" style="width:0%"></div>
-      <div class="progress-proj" id="progress-proj"></div>
     </div>
     <div class="progress-meta">
       <span>$0</span>
       <span id="progress-spent-label" style="font-weight:600;color:var(--navy);"></span>
-      <span id="progress-proj-label" style="color:var(--amber);font-weight:600;"></span>
-      <span>$500,000</span>
-    </div>
-    <div class="legend" style="margin-bottom:20px;">
-      <span><span class="legend-dot" style="background:linear-gradient(90deg,var(--navy),var(--sky));"></span>Spent</span>
-      <span><span class="legend-dot" style="background:rgba(196,127,24,.35);border:1.5px dashed var(--amber);"></span>Projected Remaining</span>
-    </div>
-
-    <!-- Divider -->
-    <div style="border-top:1px solid var(--border);margin:0 -24px 20px;"></div>
-
-    <!-- Yearly -->
-    <div class="progress-header">
-      <span class="progress-title">Yearly Budget</span>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <select id="yr-select" onchange="renderProgress()" style="padding:5px 10px;font-size:.8rem;border-radius:6px;border:1.5px solid var(--border);font-family:'Montserrat',sans-serif;font-weight:600;color:var(--navy);background:var(--off-white);">
-          <option value="2026">2026</option>
-          <option value="2027">2027</option>
-          <option value="2028">2028</option>
-        </select>
-        <button class="btn-outline" onclick="openYearBudgetModal()" style="padding:5px 12px;font-size:.72rem;">Edit Year Budgets</button>
-        <span class="progress-pct" id="yr-progress-pct"></span>
-      </div>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill good" id="yr-progress-fill" style="width:0%"></div>
-      <div class="progress-proj" id="yr-progress-proj"></div>
-    </div>
-    <div class="progress-meta">
-      <span>$0</span>
-      <span id="yr-progress-spent-label" style="font-weight:600;color:var(--navy);"></span>
-      <span id="yr-progress-proj-label" style="color:var(--amber);font-weight:600;"></span>
-      <span id="yr-progress-budget-label"></span>
-    </div>
-    <div class="legend">
-      <span><span class="legend-dot" style="background:linear-gradient(90deg,var(--navy),var(--sky));"></span>Spent</span>
-      <span><span class="legend-dot" style="background:rgba(196,127,24,.35);border:1.5px dashed var(--amber);"></span>Projected Remaining</span>
+      <span id="total-budget-right"></span>
     </div>
   </div>
 
-  <!-- Projection Settings -->
-  <div class="proj-settings-bar" id="proj-settings-bar">
-    <div class="proj-settings-inner">
-      <span class="proj-label">Projection Model:</span>
-      <div class="proj-mode-group">
-        <button class="proj-mode-btn" id="pm-linear" onclick="setProjectionMode('linear')">Linear</button>
-        <button class="proj-mode-btn active" id="pm-frontloaded" onclick="setProjectionMode('frontloaded')">Front-loaded</button>
-        <button class="proj-mode-btn" id="pm-remaining" onclick="setProjectionMode('remaining')">Use Remaining Budget</button>
-        <button class="proj-mode-btn" id="pm-manual" onclick="setProjectionMode('manual')">Manual Override</button>
-      </div>
-      <div id="proj-mode-desc" class="proj-mode-desc"></div>
-      <div id="proj-manual-wrap" style="display:none;align-items:center;gap:8px;">
-        <span style="font-size:.8rem;color:var(--text-muted);white-space:nowrap;">Expected remaining spend:</span>
-        <span style="color:var(--navy);font-weight:600;">$</span>
-        <input type="number" id="proj-manual-val" placeholder="e.g. 280000" min="0" step="1000"
-               oninput="renderAll()" style="width:130px;padding:5px 9px;font-size:.83rem;">
-      </div>
-    </div>
-  </div>
+  <!-- Phase Breakdown -->
+  <div class="section-label" style="margin-top:8px;">Phase Breakdown</div>
+  <div id="qbo-phase-breakdown"></div>
 
-  <!-- Category + Chart -->
-  <div class="two-col">
+  <!-- Budget Health Summary -->
+  <div class="two-col" style="margin-top:8px;">
     <div class="panel">
-      <div class="panel-head">
-        <h2>Category Breakdown</h2>
-        <button class="btn-sm" onclick="openPhaseBudgetModal()">Edit Phase Budgets</button>
-      </div>
-      <div class="panel-body" id="cat-breakdown"></div>
-    </div>
-    <div class="panel">
-      <div class="panel-head" style="display:flex;justify-content:space-between;align-items:center;">
-        <h2>Monthly Spending</h2>
-        <select id="chart-year-select" onchange="renderChart()" style="background:#1d3044;border:1px solid rgba(255,255,255,.2);color:#ffffff;border-radius:6px;padding:4px 10px;font-family:'Montserrat',sans-serif;font-size:.75rem;font-weight:600;cursor:pointer;">
-          <option value="all" style="background:#1d3044;color:#ffffff;">All Years</option>
-          <option value="2026" style="background:#1d3044;color:#ffffff;">2026</option>
-          <option value="2027" style="background:#1d3044;color:#ffffff;">2027</option>
-          <option value="2028" style="background:#1d3044;color:#ffffff;">2028</option>
-        </select>
-      </div>
-      <div class="panel-body">
-        <div class="chart-wrap"><canvas id="spendChart"></canvas></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Projections + Health -->
-  <div class="two-col">
-    <div class="panel">
-      <div class="panel-head"><h2>Year-by-Year Projection</h2></div>
+      <div class="panel-head"><h2>Phase Summary</h2></div>
       <div class="panel-body" style="padding:0;">
-        <table class="proj-table" id="proj-table"></table>
+        <table class="proj-table" id="phase-summary-table"></table>
       </div>
     </div>
     <div class="panel">
@@ -789,58 +716,10 @@
     </div>
   </div>
 
-  <!-- Add Expense -->
-  <div class="section-label">Add New Expense</div>
-  <div class="form-section">
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" id="inp-date">
-      </div>
-      <div class="form-group">
-        <label>Description</label>
-        <input type="text" id="inp-desc" placeholder="e.g. Drywall labor">
-      </div>
-      <div class="form-group">
-        <label>Phase</label>
-        <select id="inp-phase" onchange="updateProjectSelect()"></select>
-      </div>
-      <div class="form-group">
-        <label>Project</label>
-        <select id="inp-project" onchange="updateCostTypeSelect()"></select>
-      </div>
-      <div class="form-group">
-        <label>Cost Type</label>
-        <select id="inp-costtype"></select>
-      </div>
-      <div class="form-group">
-        <label>Vendor / Contractor</label>
-        <input type="text" id="inp-vendor" placeholder="Vendor name">
-      </div>
-      <div class="form-group">
-        <label>Amount ($)</label>
-        <input type="number" id="inp-amount" placeholder="0.00" min="0" step="0.01">
-      </div>
-      <div class="form-group" style="justify-content:flex-end;">
-        <button class="btn-primary" onclick="addExpense()">+ Add Expense</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Expense Log -->
-  <div class="section-label">Expense Log</div>
-  <div class="log-section">
-    <div class="log-toolbar">
-      <h2>All Expenses</h2>
-      <div class="log-controls">
-        <input type="text" id="search-inp" placeholder="Search…" oninput="renderTable()" style="width:150px;">
-        <select id="filter-phase" onchange="renderTable()" style="padding:5px 8px;font-size:.81rem;">
-          <option value="">All Phases</option>
-        </select>
-        <button class="btn-sm" onclick="exportCSV()">⬇ CSV</button>
-      </div>
-    </div>
-    <div id="table-wrap"></div>
+  <!-- Report Info -->
+  <div id="qbo-report-info" style="margin-top:16px;padding:10px 16px;background:var(--off-white);border-radius:8px;border:1px solid var(--border);font-size:.8rem;color:var(--text-muted);display:flex;align-items:center;gap:8px;">
+    <span>📊</span>
+    <span id="qbo-report-date">Budget data sourced from QuickBooks. Last updated: —</span>
   </div>
 
 </div><!-- /page-budget -->
@@ -1001,6 +880,8 @@ let categoryBudgets = {};
 let subcatBudgets = {};
 
 let expenses = [];
+let qboData = []; // loaded from lb_qbo_data
+
 let yearBudgets = { 2026: 300000, 2027: 150000, 2028: 50000 };
 let deleteIndex = null;
 let chartInstance = null;
@@ -1020,7 +901,6 @@ function save() {
       credentials: 'include',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({ data: {
-        lb_expenses2:    JSON.stringify(expenses),
         lb_year_budgets: JSON.stringify(yearBudgets),
         lb_phases:       JSON.stringify(phases),
         lb_projects:     JSON.stringify(projects)
@@ -1054,6 +934,8 @@ async function loadFromAPI() {
       if (d.data.lb_phases)       phases      = parseVal(d.data.lb_phases);
       if (d.data.lb_projects)     projects    = parseVal(d.data.lb_projects);
       if (d.data.lb_volunteers)        volunteers           = parseVal(d.data.lb_volunteers);
+      if (d.data.lb_qbo_data)          qboData              = parseVal(d.data.lb_qbo_data);
+      if (d.data.lb_qbo_updated)       window._qboUpdated   = parseVal(d.data.lb_qbo_updated);
       if (d.data.lb_overview_highlight) window._overviewHighlight = parseVal(d.data.lb_overview_highlight);
     }
     phases.forEach(function(ph){ if(!projects[ph.id]) projects[ph.id]=[]; });
@@ -1064,6 +946,10 @@ async function loadFromAPI() {
 }
 
 function phaseSpent(phaseId) {
+  if (qboData && qboData.length) {
+    var ph = qboData.find(function(p){ return p.account === phaseId || p.name === phaseId; });
+    return ph ? (ph.spent || 0) : 0;
+  }
   return expenses.filter(function(e){ return e.phase===phaseId; }).reduce(function(s,e){ return s+e.amount; },0);
 }
 function projectSpent(phaseId, projId) {
@@ -1080,7 +966,14 @@ const fmt  = n => '$' + Math.round(n).toLocaleString('en-US');
 const fmtD = n => '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
 const pct  = (a,b) => b ? Math.round(a/b*100) : 0;
 
-function totalSpent() { return expenses.reduce((s,e)=>s+e.amount,0); }
+function totalSpent() {
+  if (qboData && qboData.length) return qboData.reduce(function(s,ph){ return s+(ph.spent||0); }, 0);
+  return expenses.reduce(function(s,e){ return s+e.amount; }, 0);
+}
+function qboTotalBudget() {
+  if (qboData && qboData.length) return qboData.reduce(function(s,ph){ return s+(ph.budget||0); }, 0);
+  return TOTAL_BUDGET;
+}
 function catSpent(c)  { return expenses.filter(e=>e.category===c).reduce((s,e)=>s+e.amount,0); }
 function projectDaysTotal() { return (PROJECT_END-PROJECT_START)/86400000; }
 function daysSinceStart() {
@@ -1141,151 +1034,44 @@ function projectedTotal() {
 }
 
 function renderKPI() {
-  const spent=totalSpent(), rem=TOTAL_BUDGET-spent, proj=projectedTotal();
-  const elapsed=daysSinceStart(), total=projectDaysTotal();
-  const cards=[
-    {icon:'⛪',label:'Total Budget',value:fmt(TOTAL_BUDGET),sub:'2026–2028',hi:true},
-    {icon:'📊',label:'Total Spent',value:fmt(spent),sub:pct(spent,TOTAL_BUDGET)+'% used'},
-    {icon:'💰',label:'Remaining',value:fmt(rem),sub:rem<0?'⚠ Over budget':'Available'},
-    {icon:'📈',label:'Projected',value:fmt(proj||0),sub:proj>TOTAL_BUDGET?'⚠ Over pace':'At current rate'},
-    {icon:'⏱',label:'Time Elapsed',value:Math.round(elapsed/total*100)+'%',sub:Math.round(elapsed).toLocaleString()+' days'},
-    {icon:'🗂',label:'# Entries',value:expenses.length,sub:'expenses logged'},
+  var spent = totalSpent();
+  var total = qboTotalBudget();
+  var rem = total - spent;
+  var volHrs = volunteers.reduce(function(s,v){ return s+(v.people*v.hours); }, 0);
+  var volSav = volunteers.reduce(function(s,v){ return s+(v.rate||0); }, 0);
+  var elapsed = daysSinceStart(), totalDays = projectDaysTotal();
+  var cards = [
+    {icon:'⛪', label:'Total Budget',   value:fmt(total),   sub:'2026–2028', hi:true},
+    {icon:'📊', label:'Total Spent',    value:fmt(spent),   sub:pct(spent,total)+'% used'},
+    {icon:'💰', label:'Remaining',      value:fmt(rem),     sub:rem<0?'⚠ Over budget':'Available'},
+    {icon:'⏱', label:'Time Elapsed',   value:Math.round(elapsed/totalDays*100)+'%', sub:Math.round(elapsed).toLocaleString()+' days'},
+    {icon:'👷', label:'Vol. Hours',     value:Math.round(volHrs).toLocaleString(), sub:'total contributed'},
+    {icon:'💵', label:'Vol. Savings',   value:fmt(volSav),  sub:'saved through volunteers'},
   ];
-  document.getElementById('kpi-grid').innerHTML=cards.map(c=>`
-    <div class="kpi-card ${c.hi?'highlight':''}">
-      <div class="kpi-icon">${c.icon}</div>
-      <div class="kpi-label">${c.label}</div>
-      <div class="kpi-value">${c.value}</div>
-      <div class="kpi-sub">${c.sub}</div>
-    </div>`).join('');
+  document.getElementById('kpi-grid').innerHTML = cards.map(function(c){
+    return '<div class="kpi-card '+(c.hi?'highlight':'')+'"><div class="kpi-icon">'+c.icon+'</div><div class="kpi-label">'+c.label+'</div><div class="kpi-value">'+c.value+'</div><div class="kpi-sub">'+c.sub+'</div></div>';
+  }).join('');
 }
 
 function renderProgress() {
-  // ── Overall bar ──
-  const spent=totalSpent(), proj=projectedTotal();
-  const sp=Math.min(pct(spent,TOTAL_BUDGET),100);
-  const pp=Math.min(pct(proj,TOTAL_BUDGET),100);
-  const fill=document.getElementById('progress-fill');
-  fill.style.width=sp+'%';
-  fill.className='progress-fill '+(sp>90?'over':sp>70?'warn':'good');
-  const pe=document.getElementById('progress-proj');
-  if(proj>spent&&proj<=TOTAL_BUDGET){pe.style.left=sp+'%';pe.style.width=(pp-sp)+'%';pe.style.display='block';}
-  else{pe.style.display='none';}
-  document.getElementById('progress-pct').textContent=sp+'%';
-  document.getElementById('progress-spent-label').textContent=fmt(spent)+' spent';
-  document.getElementById('progress-proj-label').textContent=proj>0?'Proj: '+fmt(proj):'';
-
-  // ── Yearly bar ──
-  const yrEl=document.getElementById('yr-select'); const yr=yrEl&&yrEl.value?parseInt(yrEl.value):2026;
-  const yrBudget=yearBudgets[yr]||0;
-  const yrSpent=expenses.filter(e=>new Date(e.date+'T00:00:00').getFullYear()===yr).reduce((s,e)=>s+e.amount,0);
-
-  // Yearly projection: if current year, extrapolate; if future, use overall daily rate
-  const today=new Date();
-  let yrProj=yrSpent;
-  if(today.getFullYear()===yr){
-    const doy=(today-new Date(yr,0,1))/86400000;
-    const diy=(new Date(yr+1,0,1)-new Date(yr,0,1))/86400000;
-    if(doy>0) yrProj=yrSpent/doy*diy;
-  } else if(today.getFullYear()<yr){
-    const elapsed=daysSinceStart();
-    const dailyRate=elapsed>0?totalSpent()/elapsed:0;
-    const diy=(new Date(yr+1,0,1)-new Date(yr,0,1))/86400000;
-    yrProj=dailyRate*diy;
-  }
-
-  const ysp=yrBudget>0?Math.min(pct(yrSpent,yrBudget),100):0;
-  const ypp=yrBudget>0?Math.min(pct(yrProj,yrBudget),100):0;
-  const yrFill=document.getElementById('yr-progress-fill');
-  yrFill.style.width=ysp+'%';
-  yrFill.className='progress-fill '+(ysp>90?'over':ysp>70?'warn':'good');
-  const yrPe=document.getElementById('yr-progress-proj');
-  if(yrProj>yrSpent&&yrProj<=yrBudget){yrPe.style.left=ysp+'%';yrPe.style.width=(ypp-ysp)+'%';yrPe.style.display='block';}
-  else{yrPe.style.display='none';}
-  document.getElementById('yr-progress-pct').textContent=yrBudget>0?ysp+'%':'';
-  document.getElementById('yr-progress-spent-label').textContent=fmt(yrSpent)+' spent';
-  document.getElementById('yr-progress-proj-label').textContent=yrProj>0&&yrProj!==yrSpent?'Proj: '+fmt(Math.round(yrProj)):'';
-  document.getElementById('yr-progress-budget-label').textContent=fmt(yrBudget)+' budget';
+  var spent = totalSpent();
+  var total = qboTotalBudget();
+  var sp = Math.min(pct(spent, total), 100);
+  var el = document.getElementById('progress-fill');
+  if (el) el.style.width = sp + '%';
+  var pctEl = document.getElementById('progress-pct');
+  if (pctEl) pctEl.textContent = sp + '%';
+  var spentEl = document.getElementById('progress-spent-label');
+  if (spentEl) spentEl.textContent = fmt(spent) + ' spent';
+  var lblEl = document.getElementById('total-budget-label');
+  if (lblEl) lblEl.textContent = fmt(total) + ' total';
+  var rightEl = document.getElementById('total-budget-right');
+  if (rightEl) rightEl.textContent = fmt(total);
 }
 
 // phaseSpent, projectSpent, costTypeSpent defined near save()
 
-function renderCategories() {
-  var rows = phases.map(function(ph, phIdx) {
-    var phBudget = ph.budget || 0;
-    var phSpent  = phaseSpent(ph.id);
-    var pp       = Math.min(pct(phSpent, phBudget), 100);
-    var phColor  = PHASE_COLORS[phIdx] || '#2b4560';
-    var phCls    = pp>90?'badge-red':pp>70?'badge-amber':'badge-green';
-    var phTxt    = pp>90?'At Risk':pp>70?'Watch':'On Track';
-    var phProjects = projects[ph.id] || [];
-
-    var projRows = phProjects.map(function(proj) {
-      var prBudget = proj.budget || 0;
-      var prSpent  = projectSpent(ph.id, proj.id);
-      var prp      = Math.min(pct(prSpent, prBudget), 100);
-      var prCls    = prp>90?'badge-red':prp>70?'badge-amber':'badge-green';
-      var prTxt    = prp>90?'At Risk':prp>70?'Watch':'On Track';
-
-      var ctRows = COST_TYPES.map(function(ct) {
-        var ctBudget = (proj.costBudgets||{})[ct] || 0;
-        var ctSpent  = costTypeSpent(ph.id, proj.id, ct);
-        var ctp      = ctBudget > 0 ? Math.min(pct(ctSpent, ctBudget), 100) : 0;
-        var ctCls    = ctp>90?'badge-red':ctp>70?'badge-amber':'badge-green';
-        var ctTxt    = ctp>90?'At Risk':ctp>70?'Watch':'On Track';
-        var ctAmts   = fmt(ctSpent) + ' / ' + (ctBudget>0 ? fmt(ctBudget) : '—');
-        var ctBadge  = ctBudget>0 ? '<span class="badge ' + ctCls + '">' + ctTxt + '</span>' : '';
-        return '<div class="subcat-row" style="padding-left:32px;">'
-             + '<div class="cat-info">'
-             + '<span class="cat-name" style="font-size:.79rem;font-weight:400;color:var(--text-muted);">' + ct + '</span>'
-             + '<div style="display:flex;align-items:center;gap:8px;">'
-             + '<span class="cat-amounts">' + ctAmts + '</span>' + ctBadge
-             + '</div></div>'
-             + '<div class="cat-bar-track" style="margin-left:0;">'
-             + '<div class="cat-bar-fill" style="width:' + ctp + '%;background:' + phColor + ';opacity:.4;"></div>'
-             + '</div></div>';
-      }).join('');
-
-      return '<div class="proj-block">'
-           + '<div class="phase-header" data-phaseid="' + ph.id + '" data-projid="' + proj.id + '" onclick="toggleProject(this.dataset.phaseid,this.dataset.projid)" style="cursor:pointer;padding-left:20px;">'
-           + '<div style="display:flex;align-items:center;gap:8px;">'
-           + '<span class="phase-toggle" id="ptoggle-' + proj.id + '" style="font-size:.65rem;transition:transform .2s;">&#9658;</span>'
-           + '<span class="cat-name" style="font-size:.84rem;">' + proj.name + '</span>'
-           + '</div>'
-           + '<div style="display:flex;align-items:center;gap:8px;">'
-           + '<span class="cat-amounts">' + fmt(prSpent) + ' / ' + (prBudget>0?fmt(prBudget):'—') + '</span>'
-           + (prBudget>0 ? '<span class="badge ' + prCls + '">' + prTxt + '</span>' : '')
-           + '</div></div>'
-           + '<div class="cat-bar-track" style="margin-left:20px;margin-bottom:2px;">'
-           + '<div class="cat-bar-fill" style="width:' + prp + '%;background:' + phColor + ';opacity:.7;"></div>'
-           + '</div>'
-           + '<div id="ctrows-' + proj.id + '" style="display:none;">' + ctRows + '</div>'
-           + '</div>';
-    }).join('');
-
-    var emptyMsg = phProjects.length===0
-      ? '<div style="padding:10px 16px;font-size:.82rem;color:var(--text-muted);font-style:italic;">No projects yet — add one via Edit Phase Budgets</div>'
-      : '';
-
-    return '<div class="phase-block" id="phblock-' + ph.id + '">'
-         + '<div class="phase-header" data-phaseid="' + ph.id + '" onclick="togglePhase(this.dataset.phaseid)" style="cursor:pointer;">'
-         + '<div style="display:flex;align-items:center;gap:8px;">'
-         + '<span class="phase-toggle" id="toggle-' + ph.id + '" style="font-size:.7rem;transition:transform .2s;">&#9658;</span>'
-         + '<span class="phase-name">' + ph.name + '</span>'
-         + '</div>'
-         + '<div style="display:flex;align-items:center;gap:8px;">'
-         + '<span class="cat-amounts">' + fmt(phSpent) + ' / ' + fmt(phBudget) + '</span>'
-         + '<span class="badge ' + phCls + '">' + phTxt + '</span>'
-         + '</div></div>'
-         + '<div class="cat-bar-track" style="margin-bottom:4px;">'
-         + '<div class="cat-bar-fill" style="width:' + pp + '%;background:' + phColor + ';"></div>'
-         + '</div>'
-         + '<div class="phase-subcats" id="subcats-' + ph.id + '" style="display:none;">'
-         + emptyMsg + projRows
-         + '</div></div>';
-  }).join('');
-  document.getElementById('cat-breakdown').innerHTML = rows;
-}
+function renderCategories(){/* removed: QBO-driven */}
 
 function toggleProject(phId, projId) {
   var el  = document.getElementById('ctrows-' + projId);
@@ -1321,168 +1107,37 @@ function getChartData() {
   return{labels:sorted.map(k=>keyToLabel[k]),data:sorted.map(k=>buckets[k])};
 }
 
-function renderChart() {
-  const ctx=document.getElementById('spendChart').getContext('2d');
-  const{labels,data}=getChartData();
-  if(chartInstance) chartInstance.destroy();
-  chartInstance=new Chart(ctx,{
-    type:'bar',
-    data:{labels,datasets:[{
-      label:'Spending',data,
-      backgroundColor:'rgba(43,69,96,.75)',
-      hoverBackgroundColor:'rgba(78,116,153,.9)',
-      borderRadius:5
-    }]},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmt(c.parsed.y)}}},
-      scales:{
-        x:{ticks:{font:{size:10,family:'Montserrat'},maxRotation:45},grid:{display:false}},
-        y:{ticks:{font:{size:10},callback:v=>fmt(v)},grid:{color:'rgba(0,0,0,.05)'}}
-      }
-    }
-  });
-}
+function renderChart(){/* removed: QBO-driven */}
 
-function renderProjections() {
-  const years=[2026,2027,2028];
-  const rows=years.map(yr=>{
-    const ye=expenses.filter(e=>new Date(e.date+'T00:00:00').getFullYear()===yr);
-    const s=ye.reduce((a,e)=>a+e.amount,0);
-    const today=new Date(); let p=s;
-    if(today.getFullYear()===yr){
-      const doy=(today-new Date(yr,0,1))/86400000;
-      const diy=(new Date(yr+1,0,1)-new Date(yr,0,1))/86400000;
-      if(doy>0) p=s/doy*diy;
-    } else if(today.getFullYear()<yr){
-      const elapsed=daysSinceStart();
-      const dailyRate=elapsed>0?totalSpent()/elapsed:0;
-      const ys=Math.max(0,(new Date(yr,0,1)-PROJECT_START)/86400000);
-      const ye2=Math.min(projectDaysTotal(),(new Date(yr+1,0,1)-PROJECT_START)/86400000);
-      p=dailyRate*(ye2-ys);
-    }
-    const yb=yearBudgets[yr]||0;
-    const diff=Math.round(p)-yb;
-    const diffStr=diff===0?'—':(diff>0?'<span style="color:var(--red);">+'+fmt(diff)+'</span>':'<span style="color:var(--green);">'+fmt(diff)+'</span>');
-    return`<tr><td>${yr}</td><td>${fmt(yb)}</td><td>${fmt(s)}</td><td>${fmt(Math.round(p))}</td><td>${diffStr}</td></tr>`;
-  });
-  const ts=totalSpent(),tp=projectedTotal();
-  const totalDiff=Math.round(tp)-TOTAL_BUDGET;
-  const totalDiffStr=totalDiff===0?'—':(totalDiff>0?'<span style="color:var(--red);">+'+fmt(totalDiff)+'</span>':'<span style="color:var(--green);">'+fmt(totalDiff)+'</span>');
-  document.getElementById('proj-table').innerHTML=`
-    <thead><tr><th>Year</th><th>Year Budget</th><th>Actual Spent</th><th>Projected</th><th>vs Budget</th></tr></thead>
-    <tbody>${rows.join('')}
-    <tr><td>Total</td><td>${fmt(TOTAL_BUDGET)}</td><td>${fmt(ts)}</td><td>${fmt(Math.round(tp))}</td><td>${totalDiffStr}</td></tr>
-    </tbody>`;
-}
+function renderProjections(){/* removed: QBO-driven */}
 
 function renderHealth() {
-  const spent=totalSpent(),proj=projectedTotal();
-  const elapsed=daysSinceStart(),total=projectDaysTotal();
-  const timePct=elapsed/total*100, spentPct=spent/TOTAL_BUDGET*100;
-  const burn=elapsed>0?spent/elapsed:0;
-  const burnNeeded=total>0?TOTAL_BUDGET/total:0;
-  const items=[
-    {k:'Budget Status',v:proj>TOTAL_BUDGET?'⚠ Over-pace':'✓ On Track',c:proj>TOTAL_BUDGET?'var(--red)':'var(--green)'},
-    {k:'Daily Burn Rate',v:fmtD(burn)+'/day',c:'var(--navy)'},
-    {k:'Target Burn Rate',v:fmtD(burnNeeded)+'/day',c:'var(--text-muted)'},
-    {k:'Burn vs Target',v:burn<=burnNeeded?Math.round(burn/burnNeeded*100)+'% of target':Math.round(burn/burnNeeded*100)+'% (over)',c:burn>burnNeeded?'var(--red)':'var(--green)'},
-    {k:'Time Elapsed',v:timePct.toFixed(1)+'%',c:'var(--navy)'},
-    {k:'Budget Used',v:spentPct.toFixed(1)+'%',c:'var(--navy)'},
-    {k:'Spend vs Time',v:spentPct<=timePct?'✓ Under-paced':'⚠ Ahead of pace',c:spentPct<=timePct?'var(--green)':'var(--amber)'},
+  var el = document.getElementById('health-panel');
+  if (!el) return;
+  var spent = totalSpent(), total = qboTotalBudget(), rem = total - spent;
+  var elapsed = daysSinceStart(), totalDays = projectDaysTotal();
+  var burn = elapsed > 0 ? spent / elapsed : 0;
+  var daysLeft = totalDays - elapsed;
+  var burnNeeded = daysLeft > 0 ? rem / daysLeft : 0;
+  var pacing = burn > 0 && burnNeeded > 0 ? burn / burnNeeded : 0;
+
+  var items = [
+    {k:'Total Budget',        v:fmt(total),              c:'var(--navy)'},
+    {k:'Total Spent',         v:fmt(spent),              c:'var(--navy)'},
+    {k:'Remaining Budget',    v:fmt(rem),                c:rem<0?'#dc3545':'var(--green)'},
+    {k:'% Budget Used',       v:pct(spent,total)+'%',    c:spent>total?'#dc3545':'var(--navy)'},
+    {k:'Daily Burn Rate',     v:fmt(burn)+'/day',        c:'var(--navy)'},
+    {k:'Target Burn Rate',    v:fmt(burnNeeded)+'/day',  c:'var(--text-muted)'},
+    {k:'Pacing',              v:pacing>1.2?'⚠ Over pace':pacing<0.5?'Under pace':'On track', c:pacing>1.2?'#dc3545':pacing<0.5?'#c47f18':'var(--green)'},
   ];
-  document.getElementById('health-panel').innerHTML=items.map(i=>`
-    <div class="health-row">
-      <span class="health-key">${i.k}</span>
-      <span class="health-val" style="color:${i.c};">${i.v}</span>
-    </div>`).join('');
-}
-
-function renderTable() {
-  const searchEl=document.getElementById('search-inp');
-  const search=searchEl?searchEl.value.toLowerCase():'';
-  const cfEl=document.getElementById('filter-cat');
-  const cf=cfEl?cfEl.value:'';
-  let filtered=expenses.map((e,i)=>({...e,_idx:i})).filter(e=>{
-    if(cf&&e.category!==cf) return false;
-    if(search&&!`${e.description} ${e.vendor} ${e.category}`.toLowerCase().includes(search)) return false;
-    return true;
-  });
-  if(!filtered.length){
-    document.getElementById('table-wrap').innerHTML='<div class="empty-state">No expenses found.</div>';
-    return;
-  }
-  var filterPhaseEl = document.getElementById('filter-phase');
-  var filterPhaseVal = filterPhaseEl ? filterPhaseEl.value : '';
-  if (filterPhaseVal) filtered = filtered.filter(function(e){ return e.phase===filterPhaseVal; });
-
-  var rows = filtered.map(function(e) {
-    var phProjs = projects[e.phase] || [];
-
-    var phOpts = phases.map(function(p){
-      return '<option value="' + p.id + '"' + (p.id===e.phase?' selected':'') + '>' + p.name.replace(/Phase \d+: /,'') + '</option>';
-    }).join('');
-
-    var prOpts = phProjs.length
-      ? phProjs.map(function(p){
-          return '<option value="' + p.id + '"' + (p.id===e.project?' selected':'') + '>' + p.name + '</option>';
-        }).join('')
-      : '<option value="">—</option>';
-
-    var ctOpts = COST_TYPES.map(function(ct){
-      return '<option value="' + ct + '"' + (ct===e.costType?' selected':'') + '>' + ct + '</option>';
-    }).join('');
-
-    var idx     = e._idx;
-    var dateFmt = e.date.split('-').slice(1).concat(e.date.split('-')[0]).join('/');
-    var ss      = 'border:1.5px solid var(--border);border-radius:5px;padding:3px 5px;font-size:.76rem;background:var(--off-white);color:var(--navy);';
-
-    return '<tr>'
-      + '<td>' + dateFmt + '</td>'
-      + '<td style="font-weight:500;">' + e.description + '</td>'
-      + '<td><select data-idx="' + idx + '" data-fld="phase" onchange="expFieldChange(this)" style="' + ss + 'max-width:120px;">' + phOpts + '</select></td>'
-      + '<td><select data-idx="' + idx + '" data-fld="project" onchange="expFieldChange(this)" style="' + ss + 'max-width:130px;">' + prOpts + '</select></td>'
-      + '<td><select data-idx="' + idx + '" data-fld="costType" onchange="expFieldChange(this)" style="' + ss + '">' + ctOpts + '</select></td>'
-      + '<td>' + (e.vendor||'—') + '</td>'
-      + '<td style="font-weight:700;color:var(--navy);">' + fmtD(e.amount) + '</td>'
-      + '<td><button class="btn-icon" title="Delete" data-idx="' + idx + '" onclick="openDelModal(+this.dataset.idx)">&#128465;</button></td>'
-      + '</tr>';
+  el.innerHTML = items.map(function(i){
+    return '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);"><span style="color:var(--text-muted);font-size:.85rem;">'+i.k+'</span><span style="font-weight:600;font-size:.85rem;color:'+i.c+';">'+i.v+'</span></div>';
   }).join('');
-  document.getElementById('table-wrap').innerHTML =
-    '<table>'
-    + '<thead><tr><th>Date</th><th>Description</th><th>Phase</th><th>Project</th><th>Cost Type</th><th>Vendor</th><th>Amount</th><th></th></tr></thead>'
-    + '<tbody>' + rows + '</tbody>'
-    + '</table>';
 }
 
-function addExpense() {
-  var dateEl    = document.getElementById('inp-date');
-  var descEl    = document.getElementById('inp-desc');
-  var phaseEl   = document.getElementById('inp-phase');
-  var projectEl = document.getElementById('inp-project');
-  var ctEl      = document.getElementById('inp-costtype');
-  var vendorEl  = document.getElementById('inp-vendor');
-  var amountEl  = document.getElementById('inp-amount');
-  var date      = dateEl ? dateEl.value : '';
-  var desc      = descEl ? descEl.value.trim() : '';
-  var phase     = phaseEl ? phaseEl.value : '';
-  var project   = projectEl ? projectEl.value : '';
-  var costType  = ctEl ? ctEl.value : '';
-  var vendor    = vendorEl ? vendorEl.value.trim() : '';
-  var amount    = parseFloat(amountEl ? amountEl.value : 0);
-  if (!date||!desc||isNaN(amount)||amount<=0) { showToast('Please fill in Date, Description & Amount.'); return; }
-  if (!project) { showToast('Please add a project to this phase first.'); return; }
-  var phName  = (phases.find(function(p){ return p.id===phase; })||{}).name || phase;
-  var projObj = (projects[phase]||[]).find(function(p){ return p.id===project; }) || {};
-  expenses.push({date:date, description:desc, phase:phase, project:project, costType:costType,
-    category: phName + ' / ' + projObj.name + ' / ' + costType, vendor:vendor, amount:amount});
-  expenses.sort(function(a,b){ return a.date<b.date?1:-1; });
-  save(); renderAll();
-  if(descEl) descEl.value='';
-  if(vendorEl) vendorEl.value='';
-  if(amountEl) amountEl.value='';
-  showToast('Expense added successfully!');
-}
+function renderTable(){/* removed: QBO-driven */}
+
+function addExpense(){/* removed: QBO-driven */}
 
 function openDelModal(i)  {deleteIndex=i;document.getElementById('del-modal').classList.add('open');}
 function closeDelModal()  {deleteIndex=null;document.getElementById('del-modal').classList.remove('open');}
@@ -1617,13 +1272,7 @@ function saveBudgets(){
   save();closeBudgetModal();renderAll();showToast('Budgets updated!');
 }
 
-function exportCSV(){
-  if(!expenses.length){showToast('No expenses to export.');return;}
-  const h='Date,Description,Category,Vendor,Period,Amount\n';
-  const r=expenses.map(e=>`${e.date},"${e.description}",${e.category},"${e.vendor||''}",${e.period},${e.amount}`).join('\n');
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([h+r],{type:'text/csv'}));
-  a.download='lifebridge_renovation_expenses.csv';a.click();
-}
+function exportCSV(){/* removed: QBO-driven */}
 
 function showToast(msg){
   const t=document.getElementById('toast');
@@ -1841,6 +1490,10 @@ function generatePDF() {
   const TOTAL_BUDGET = 500000;
 
   function phaseSpent(phaseId) {
+  if (qboData && qboData.length) {
+    var ph = qboData.find(function(p){ return p.account === phaseId || p.name === phaseId; });
+    return ph ? (ph.spent || 0) : 0;
+  }
   return expenses.filter(function(e){ return e.phase===phaseId; }).reduce(function(s,e){ return s+e.amount; },0);
 }
 function projectSpent(phaseId, projId) {
@@ -2486,18 +2139,311 @@ function renderOverview() {
   } catch(e) {}
 }
 
-function renderAll(){renderKPI();renderProgress();renderCategories();renderChart();renderProjections();renderHealth();renderTable();renderCategorySelects();}
 
-document.getElementById('inp-date').value=new Date().toISOString().slice(0,10);
+// ── QBO-driven budget rendering ─────────────────────────────
+
+function renderQBOBreakdown() {
+  var el = document.getElementById('qbo-phase-breakdown');
+  if (!el) return;
+
+  if (!qboData || !qboData.length) {
+    el.innerHTML = '<div style="padding:20px;color:var(--text-muted);font-size:.9rem;text-align:center;">No QBO data loaded yet. Share a QBO report to update.</div>';
+    return;
+  }
+
+  var PHASE_COLORS = ['#2b4560','#c05f3c','#2a7a5a'];
+  var html = '';
+
+  qboData.forEach(function(phase, pi) {
+    var phColor = PHASE_COLORS[pi] || '#2b4560';
+    var phBudget = phase.budget || 0;
+    var phSpent = phase.spent || 0;
+    var phPct = phBudget > 0 ? Math.min(Math.round(phSpent/phBudget*100), 100) : 0;
+    var phStatus = phBudget > 0 && phSpent > phBudget ? 'AT RISK' : phPct > 80 ? 'WATCH' : 'ON TRACK';
+    var phStatusColor = phStatus === 'AT RISK' ? '#dc3545' : phStatus === 'WATCH' ? '#c47f18' : '#2a7a5a';
+
+    html += '<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm);">';
+    // Phase header
+    html += '<div style="background:'+phColor+';padding:12px 20px;display:flex;justify-content:space-between;align-items:center;">';
+    html += '<span style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.95rem;color:#fff;">'+phase.name+'</span>';
+    html += '<div style="display:flex;align-items:center;gap:16px;">';
+    html += '<span style="font-size:.82rem;color:rgba(255,255,255,.8);">'+fmt(phSpent)+' / '+fmt(phBudget)+'</span>';
+    html += '<span style="background:'+phStatusColor+';color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;font-family:Montserrat,sans-serif;letter-spacing:.05em;">'+phStatus+'</span>';
+    html += '</div></div>';
+    // Phase progress bar
+    html += '<div style="height:6px;background:#e8edf2;"><div style="height:6px;width:'+phPct+'%;background:'+phColor+';transition:width .5s;"></div></div>';
+
+    // Projects
+    html += '<div style="padding:0 16px 8px;">';
+    (phase.projects || []).forEach(function(proj) {
+      var prBudget = proj.budget || 0;
+      var prSpent = proj.spent || 0;
+      if (prSpent === 0 && prBudget === 0) return; // skip empty
+      var prPct = prBudget > 0 ? Math.min(Math.round(prSpent/prBudget*100), 100) : 0;
+      var prStatus = prBudget > 0 && prSpent > prBudget ? 'AT RISK' : prPct > 80 ? 'WATCH' : 'ON TRACK';
+      var prStatusColor = prStatus === 'AT RISK' ? '#dc3545' : prStatus === 'WATCH' ? '#c47f18' : '#2a7a5a';
+      var barColor = prStatus === 'AT RISK' ? '#dc3545' : phColor;
+
+      html += '<div style="border-bottom:1px solid var(--border);padding:10px 4px;">';
+      html += '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">';
+      html += '<span style="font-weight:600;font-size:.88rem;color:var(--navy);">'+proj.name+'</span>';
+      html += '<div style="display:flex;align-items:center;gap:10px;">';
+      html += '<span style="font-size:.8rem;color:var(--text-muted);">'+fmt(prSpent)+' / '+fmt(prBudget)+'</span>';
+      html += '<span style="background:'+prStatusColor+';color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;font-family:Montserrat,sans-serif;letter-spacing:.05em;">'+prStatus+'</span>';
+      html += '</div></div>';
+      // Progress bar
+      html += '<div style="height:5px;background:#e8edf2;border-radius:3px;"><div style="height:5px;width:'+prPct+'%;background:'+barColor+';border-radius:3px;transition:width .5s;"></div></div>';
+
+      // Subcategories
+      if (proj.subcats && proj.subcats.some(function(s){ return s.spent > 0; })) {
+        html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;">';
+        proj.subcats.forEach(function(sub) {
+          if (sub.spent === 0) return;
+          html += '<span style="background:var(--off-white);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:.75rem;color:var(--navy);">';
+          html += sub.name+': '+fmt(sub.spent);
+          html += '</span>';
+        });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div></div>';
+  });
+
+  el.innerHTML = html;
+
+  // Update report date
+  var dateEl = document.getElementById('qbo-report-date');
+  if (dateEl && window._qboUpdated) {
+    dateEl.textContent = 'Budget data sourced from QuickBooks. Last updated: ' + new Date(window._qboUpdated).toLocaleDateString('en-US', {month:'long', year:'numeric'});
+  }
+}
+
+function renderPhaseSummaryTable() {
+  var el = document.getElementById('phase-summary-table');
+  if (!el || !qboData || !qboData.length) return;
+  var total = qboTotalBudget();
+  var totalSpent2 = totalSpent();
+  var html = '<thead><tr><th style="text-align:left;padding:10px 16px;">Phase</th><th style="text-align:right;padding:10px 16px;">Budget</th><th style="text-align:right;padding:10px 16px;">Spent</th><th style="text-align:right;padding:10px 16px;">Remaining</th><th style="text-align:center;padding:10px 16px;">Status</th></tr></thead><tbody>';
+  var PHASE_COLORS = ['#2b4560','#c05f3c','#2a7a5a'];
+  qboData.forEach(function(phase, pi) {
+    var b = phase.budget || 0, s = phase.spent || 0, r = b - s;
+    var status = s > b ? 'AT RISK' : (b > 0 && s/b > 0.8) ? 'WATCH' : 'ON TRACK';
+    var sc = status === 'AT RISK' ? '#dc3545' : status === 'WATCH' ? '#c47f18' : '#2a7a5a';
+    var shortName = phase.name.replace(/Phase \d+ - /, '');
+    html += '<tr style="border-bottom:1px solid var(--border);">';
+    html += '<td style="padding:10px 16px;font-weight:600;color:'+PHASE_COLORS[pi]+';">'+shortName+'</td>';
+    html += '<td style="text-align:right;padding:10px 16px;">'+fmt(b)+'</td>';
+    html += '<td style="text-align:right;padding:10px 16px;font-weight:600;">'+fmt(s)+'</td>';
+    html += '<td style="text-align:right;padding:10px 16px;color:'+(r<0?'#dc3545':'var(--green)')+';">'+fmt(Math.abs(r))+(r<0?' over':' left')+'</td>';
+    html += '<td style="text-align:center;padding:10px 16px;"><span style="background:'+sc+';color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;">'+status+'</span></td>';
+    html += '</tr>';
+  });
+  html += '<tr style="background:var(--off-white);font-weight:700;"><td style="padding:10px 16px;">TOTAL</td><td style="text-align:right;padding:10px 16px;">'+fmt(total)+'</td><td style="text-align:right;padding:10px 16px;">'+fmt(totalSpent2)+'</td><td style="text-align:right;padding:10px 16px;">'+fmt(total-totalSpent2)+' left</td><td></td></tr>';
+  html += '</tbody>';
+  el.innerHTML = html;
+}
+
+function renderAll(){renderKPI();renderProgress();renderQBOBreakdown();renderPhaseSummaryTable();renderHealth();}
+
+// inp-date removed (QBO-driven budget)
 document.getElementById('vol-date').value=new Date().toISOString().slice(0,10);
 document.getElementById('vol-rate').value='';
 
 // Load data from API then render
+
+// ── Auth & Public/Admin mode ────────────────────────────────
+var IS_ADMIN = false;
+var IS_PUBLIC = window.location.pathname === '/public';
+
+function initAuthMode() {
+  if (IS_PUBLIC) {
+    // Public view — hide admin tabs and sign out, show only overview
+    document.querySelectorAll('.admin-tab').forEach(function(t){ t.style.display = 'none'; });
+    document.getElementById('notify-btn').style.display = 'none';
+    document.getElementById('signout-btn').style.display = 'none';
+    document.getElementById('pdf-btn').style.display = 'none';
+    switchPage('overview');
+  } else {
+    // Authenticated admin
+    IS_ADMIN = true;
+    document.getElementById('notify-btn').style.display = '';
+    document.getElementById('webhook-btn').style.display = '';
+    document.getElementById('signout-btn').style.display = '';
+    document.getElementById('admin-btn').style.display = 'none'; // hide admin login btn when already admin
+    // Load webhook URL
+    fetch('/api/settings', { credentials: 'include' })
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if (d.ok) document.getElementById('webhook-url-input').value = d.webhookUrl || ''; })
+      .catch(function(){});
+  }
+}
+
+// ── Admin Login Modal ───────────────────────────────────────
+function openAdminLoginModal() {
+  document.getElementById('admin-pw-input').value = '';
+  document.getElementById('admin-login-error').textContent = '';
+  document.getElementById('admin-login-modal').style.display = 'flex';
+  setTimeout(function(){ document.getElementById('admin-pw-input').focus(); }, 100);
+}
+function closeAdminLoginModal() {
+  document.getElementById('admin-login-modal').style.display = 'none';
+}
+
+async function submitAdminLogin() {
+  var pw = document.getElementById('admin-pw-input').value;
+  var errEl = document.getElementById('admin-login-error');
+  if (!pw) { errEl.textContent = 'Please enter the password'; return; }
+  errEl.textContent = '';
+  try {
+    var r = await fetch('/login', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'password=' + encodeURIComponent(pw),
+      redirect: 'manual'
+    });
+    if (r.type === 'opaqueredirect' || r.status === 0 || r.status === 200 || r.status === 302) {
+      // Login succeeded — reload as admin
+      window.location.href = '/';
+    } else {
+      errEl.textContent = 'Incorrect password';
+    }
+  } catch(e) {
+    errEl.textContent = 'Error — please try again';
+  }
+}
+
+// ── Notify Modal ────────────────────────────────────────────
+function openNotifyModal() {
+  document.getElementById('notify-status').textContent = '';
+  document.getElementById('notify-modal').style.display = 'flex';
+}
+function closeNotifyModal() {
+  document.getElementById('notify-modal').style.display = 'none';
+}
+
+async function sendNotification() {
+  var statusEl = document.getElementById('notify-status');
+  statusEl.style.color = 'var(--text-muted)';
+  statusEl.textContent = 'Sending...';
+  try {
+    var r = await fetch('/api/notify', { method: 'POST', credentials: 'include' });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.style.color = 'var(--green)';
+      statusEl.textContent = '✓ Notification sent successfully!';
+      setTimeout(closeNotifyModal, 2000);
+    } else {
+      statusEl.style.color = '#dc3545';
+      statusEl.textContent = '✗ ' + (d.error || 'Failed to send. Check your webhook URL.');
+    }
+  } catch(e) {
+    statusEl.style.color = '#dc3545';
+    statusEl.textContent = '✗ Network error';
+  }
+}
+
+// ── Webhook Settings Modal ──────────────────────────────────
+function openWebhookModal() {
+  document.getElementById('webhook-save-status').textContent = '';
+  document.getElementById('webhook-modal').style.display = 'flex';
+}
+function closeWebhookModal() {
+  document.getElementById('webhook-modal').style.display = 'none';
+}
+
+async function saveWebhookUrl() {
+  var url = document.getElementById('webhook-url-input').value.trim();
+  var statusEl = document.getElementById('webhook-save-status');
+  try {
+    var r = await fetch('/api/settings', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ webhookUrl: url })
+    });
+    var d = await r.json();
+    if (d.ok) {
+      statusEl.style.color = 'var(--green)';
+      statusEl.textContent = 'Saved ✓';
+      setTimeout(function(){ statusEl.textContent = ''; closeWebhookModal(); }, 1500);
+    } else {
+      statusEl.style.color = '#dc3545';
+      statusEl.textContent = 'Save failed';
+    }
+  } catch(e) {
+    statusEl.style.color = '#dc3545';
+    statusEl.textContent = 'Error saving';
+  }
+}
+
 loadFromAPI().then(function() {
-  renderAll();
-  setProjectionMode(projectionMode);
-  renderCategorySelects();
+  initAuthMode();
+  if (IS_PUBLIC) {
+    // Public mode — load from public API instead
+    fetch('/api/public-data')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d.ok && d.data) {
+          function parseVal(v) { return typeof v === 'string' ? JSON.parse(v) : v; }
+          if (d.data.lb_expenses2)    expenses    = parseVal(d.data.lb_expenses2);
+          if (d.data.lb_year_budgets) yearBudgets = parseVal(d.data.lb_year_budgets);
+          if (d.data.lb_phases)       phases      = parseVal(d.data.lb_phases);
+          if (d.data.lb_projects)     projects    = parseVal(d.data.lb_projects);
+          if (d.data.lb_volunteers)   volunteers  = parseVal(d.data.lb_volunteers);
+          _dataLoaded = false; // prevent saves from public view
+        }
+        renderOverview();
+      })
+      .catch(function(e) { console.error('Public data load failed:', e); });
+  } else {
+    renderAll();
+    setProjectionMode(projectionMode);
+    renderCategorySelects();
+  }
 });
 </script>
+
+<!-- ── Notify Modal ─────────────────────────────── -->
+<div id="notify-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:32px;width:460px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <h3 style="font-family:Montserrat,sans-serif;color:var(--navy);margin-bottom:8px;font-size:1.1rem;">Notify Congregation</h3>
+    <p style="color:var(--text-muted);font-size:.88rem;margin-bottom:20px;">This will send an email update via your Zapier webhook with the latest project summary.</p>
+    <div id="notify-status" style="margin-bottom:16px;font-size:.88rem;min-height:20px;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeNotifyModal()" style="padding:8px 18px;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.88rem;">Cancel</button>
+      <button onclick="sendNotification()" style="padding:8px 20px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.88rem;font-weight:600;">Send Notification</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Admin Login Modal ──────────────────────────── -->
+<div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:32px;width:380px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <h3 style="font-family:Montserrat,sans-serif;color:var(--navy);margin-bottom:8px;font-size:1.1rem;">Admin Login</h3>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:20px;">Enter the admin password to access Budget and Volunteer tabs.</p>
+    <input type="password" id="admin-pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')submitAdminLogin()"
+      style="width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:6px;font-size:.92rem;margin-bottom:10px;box-sizing:border-box;">
+    <div id="admin-login-error" style="color:#dc3545;font-size:.82rem;min-height:18px;margin-bottom:12px;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button onclick="closeAdminLoginModal()" style="padding:8px 18px;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.88rem;">Cancel</button>
+      <button onclick="submitAdminLogin()" style="padding:8px 20px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.88rem;font-weight:600;">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Webhook Settings Modal ────────────────────── -->
+<div id="webhook-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;padding:32px;width:480px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,.2);">
+    <h3 style="font-family:Montserrat,sans-serif;color:var(--navy);margin-bottom:8px;font-size:1.1rem;">Notification Settings</h3>
+    <p style="font-size:.78rem;color:var(--text-muted);margin-bottom:12px;">Paste your Zapier Catch Hook URL. Used for congregation notifications.</p>
+    <input type="url" id="webhook-url-input" placeholder="https://hooks.zapier.com/hooks/catch/..."
+      style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:6px;font-size:.88rem;box-sizing:border-box;margin-bottom:8px;">
+    <div style="display:flex;align-items:center;gap:10px;justify-content:flex-end;margin-top:4px;">
+      <span id="webhook-save-status" style="font-size:.82rem;color:var(--green);"></span>
+      <button onclick="closeWebhookModal()" style="padding:8px 18px;border:1.5px solid var(--border);border-radius:6px;background:#fff;cursor:pointer;font-size:.88rem;">Cancel</button>
+      <button onclick="saveWebhookUrl()" style="padding:8px 20px;background:var(--navy);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.88rem;font-weight:600;">Save</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
