@@ -679,6 +679,15 @@
 
 <div class="page active" id="page-budget">
 
+  <!-- QBO Update Banner -->
+  <div id="qbo-banner" style="display:none;background:linear-gradient(135deg,#1e3c72,#2a5298);color:#fff;border-radius:8px;padding:10px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;font-size:.85rem;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="font-size:1.1rem;">✅</span>
+      <span>All numbers are up to date as of <strong id="qbo-banner-date">—</strong></span>
+    </div>
+    <span style="opacity:.7;font-size:.75rem;font-family:Montserrat,sans-serif;letter-spacing:.05em;">SOURCE: QUICKBOOKS</span>
+  </div>
+
   <!-- KPI Cards -->
   <div class="kpi-grid" id="kpi-grid"></div>
 
@@ -2168,7 +2177,7 @@ function renderQBOBreakdown() {
     html += '<span style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.95rem;color:#fff;">'+phase.name+'</span>';
     html += '<div style="display:flex;align-items:center;gap:16px;">';
     html += '<span style="font-size:.82rem;color:rgba(255,255,255,.8);">'+fmt(phSpent)+' / '+fmt(phBudget)+'</span>';
-    html += '<span style="background:'+phStatusColor+';color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;font-family:Montserrat,sans-serif;letter-spacing:.05em;">'+phStatus+'</span>';
+    html += '<span style="background:'+phStatusColor+';color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;font-family:Montserrat,sans-serif;letter-spacing:.05em;white-space:nowrap;">'+phStatus+'</span>';
     html += '</div></div>';
     // Phase progress bar
     html += '<div style="height:6px;background:#e8edf2;"><div style="height:6px;width:'+phPct+'%;background:'+phColor+';transition:width .5s;"></div></div>';
@@ -2189,7 +2198,7 @@ function renderQBOBreakdown() {
       html += '<span style="font-weight:600;font-size:.88rem;color:var(--navy);">'+proj.name+'</span>';
       html += '<div style="display:flex;align-items:center;gap:10px;">';
       html += '<span style="font-size:.8rem;color:var(--text-muted);">'+fmt(prSpent)+' / '+fmt(prBudget)+'</span>';
-      html += '<span style="background:'+prStatusColor+';color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;font-family:Montserrat,sans-serif;letter-spacing:.05em;">'+prStatus+'</span>';
+      html += '<span style="background:'+prStatusColor+';color:#fff;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;font-family:Montserrat,sans-serif;letter-spacing:.05em;white-space:nowrap;">'+prStatus+'</span>';
       html += '</div></div>';
       // Progress bar
       html += '<div style="height:5px;background:#e8edf2;border-radius:3px;"><div style="height:5px;width:'+prPct+'%;background:'+barColor+';border-radius:3px;transition:width .5s;"></div></div>';
@@ -2212,10 +2221,16 @@ function renderQBOBreakdown() {
 
   el.innerHTML = html;
 
-  // Update report date
+  // Update report date banner
   var dateEl = document.getElementById('qbo-report-date');
-  if (dateEl && window._qboUpdated) {
-    dateEl.textContent = 'Budget data sourced from QuickBooks. Last updated: ' + new Date(window._qboUpdated).toLocaleDateString('en-US', {month:'long', year:'numeric'});
+  var banner = document.getElementById('qbo-banner');
+  var bannerDate = document.getElementById('qbo-banner-date');
+  if (window._qboUpdated) {
+    var d = new Date(window._qboUpdated);
+    var formatted = d.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'});
+    if (dateEl) dateEl.textContent = 'Budget data sourced from QuickBooks. Last updated: ' + formatted;
+    if (bannerDate) bannerDate.textContent = formatted;
+    if (banner) banner.style.display = 'flex';
   }
 }
 
@@ -2236,7 +2251,7 @@ function renderPhaseSummaryTable() {
     html += '<td style="text-align:right;padding:10px 16px;">'+fmt(b)+'</td>';
     html += '<td style="text-align:right;padding:10px 16px;font-weight:600;">'+fmt(s)+'</td>';
     html += '<td style="text-align:right;padding:10px 16px;color:'+(r<0?'#dc3545':'var(--green)')+';">'+fmt(Math.abs(r))+(r<0?' over':' left')+'</td>';
-    html += '<td style="text-align:center;padding:10px 16px;"><span style="background:'+sc+';color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;">'+status+'</span></td>';
+    html += '<td style="text-align:center;padding:10px 16px;white-space:nowrap;"><span style="background:'+sc+';color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;display:inline-block;">'+status+'</span></td>';
     html += '</tr>';
   });
   html += '<tr style="background:var(--off-white);font-weight:700;"><td style="padding:10px 16px;">TOTAL</td><td style="text-align:right;padding:10px 16px;">'+fmt(total)+'</td><td style="text-align:right;padding:10px 16px;">'+fmt(totalSpent2)+'</td><td style="text-align:right;padding:10px 16px;">'+fmt(total-totalSpent2)+' left</td><td></td></tr>';
