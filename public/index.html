@@ -1225,6 +1225,14 @@ var TOTAL_VOLUNTEER_SAVINGS = 41000; // fallback — overridden by completion-ba
 
 // ── Phase schedule & project details ────────────────────────
 var PHASE_SCHEDULE = [
+  { name: 'Pre-Launch Planning', color: '#4a4a8a', startYear: 2025, startMonth: 7, endYear: 2026, endMonth: 4, budget: 0,
+    projects: [
+      { name: 'Pre-Launch Planning', deadline: '', budget: 0, market: 0, details: [
+          'Pre-Launch Planning & Design',
+        ]
+      },
+    ]
+  },
   { name: 'Phase 1: Planning, 473 Demo, Exterior Rebuild & Leased Space', color: '#2b4560', startYear: 2026, startMonth: 1, endYear: 2026, endMonth: 12, budget: 200000,
     projects: [
       { name: 'Leased Space Demo + Rough Construction', deadline: '5/31/2026', budget: 8000, market: 20000, details: [
@@ -2207,7 +2215,9 @@ function renderOverview() {
       var details = (typeof proj === 'object' && proj.details) ? proj.details : [];
       details.forEach(function(d, dIdx) {
         totalItems++;
-        if (completedProjects['ph'+pi+'_pr'+prIdx+'_d'+dIdx]) checkedItems++;
+        var s = completedProjects['ph'+pi+'_pr'+prIdx+'_d'+dIdx];
+        if (s === true) checkedItems++;
+        else if (s === 'inprogress') checkedItems += 0.5; // count as half
       });
     });
     var pct = totalItems > 0 ? Math.round(checkedItems / totalItems * 100) : 0;
@@ -2345,17 +2355,24 @@ function renderOverview() {
           var lastDash = detail.lastIndexOf(' — ');
           var dName = lastDash > -1 ? detail.substring(0, lastDash) : detail;
           var dAmt  = lastDash > -1 ? detail.substring(lastDash + 3) : '';
-          var strikeStyle = checked ? 'text-decoration:line-through;color:#aaa;' : '';
+          var strikeStyle = isDone ? 'text-decoration:line-through;color:#aaa;' : '';
           tHtml += '<div data-key="'+key+'" onclick="handleCheckClick(this,event)" style="padding:7px 20px 7px 44px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #f0f4f8;">' + '';
           tHtml += '<div style="display:flex;align-items:center;gap:8px;">';
+          var state = completedProjects[key];
+          var isInProgress = state === 'inprogress';
+          var isDone = state === true;
           if (IS_PUBLIC) {
-            // Read-only indicator on public page
-            tHtml += '<div style="width:15px;height:15px;border-radius:50%;background:'+(checked?phColor:'#e0e0e0')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;">';
-            if (checked) tHtml += '<span style="color:#fff;font-size:.6rem;font-weight:900;">&#10003;</span>';
+            var bgColor = isDone ? phColor : isInProgress ? '#c47f18' : '#e0e0e0';
+            tHtml += '<div style="width:15px;height:15px;border-radius:50%;background:'+bgColor+';flex-shrink:0;display:flex;align-items:center;justify-content:center;">';
+            if (isDone) tHtml += '<span style="color:#fff;font-size:.6rem;font-weight:900;">&#10003;</span>';
+            if (isInProgress) tHtml += '<span style="color:#fff;font-size:.65rem;font-weight:900;">&#8943;</span>';
             tHtml += '</div>';
           } else {
-            tHtml += '<div style="width:15px;height:15px;border-radius:3px;border:2px solid '+(checked?phColor:'#ccc')+';background:'+(checked?phColor:'transparent')+';flex-shrink:0;display:flex;align-items:center;justify-content:center;">';
-            if (checked) tHtml += '<span style="color:#fff;font-size:.6rem;font-weight:900;">&#10003;</span>';
+            var borderColor = isDone ? phColor : isInProgress ? '#c47f18' : '#ccc';
+            var bgFill = isDone ? phColor : isInProgress ? '#c47f18' : 'transparent';
+            tHtml += '<div style="width:15px;height:15px;border-radius:3px;border:2px solid '+borderColor+';background:'+bgFill+';flex-shrink:0;display:flex;align-items:center;justify-content:center;">';
+            if (isDone) tHtml += '<span style="color:#fff;font-size:.6rem;font-weight:900;">&#10003;</span>';
+            if (isInProgress) tHtml += '<span style="color:#fff;font-size:.65rem;font-weight:900;">&#8943;</span>';
             tHtml += '</div>';
           }
           tHtml += '<span style="'+strikeStyle+'font-size:.78rem;color:var(--text-muted);">'+dName+'</span>';
@@ -2402,9 +2419,15 @@ function saveCompletedProjects() {
 function handleCheckClick(el, event) { if (IS_PUBLIC) return; toggleProjectComplete(el.getAttribute('data-key'), event); }
 function toggleProjectComplete(key, event) {
   if (event) event.stopPropagation();
-  completedProjects[key] = !completedProjects[key];
+  var current = completedProjects[key];
+  if (!current) {
+    completedProjects[key] = 'inprogress';
+  } else if (current === 'inprogress') {
+    completedProjects[key] = true;
+  } else {
+    completedProjects[key] = false;
+  }
   saveCompletedProjects();
-  // Re-render only the timeline portion without collapsing
   renderTimelineOnly();
 }
 
@@ -2530,7 +2553,7 @@ function renderQBOBreakdown() {
       // Overflow spending spills into contingency
       var overflow = prSpent > prBudget ? prSpent - prBudget : 0;
       var effectiveSpent = Math.min(prSpent, prBudget);
-      var projDets = (proj.details || []); var allDetailsDone = projDets.length > 0 && projDets.every(function(d, dIdx) { return completedProjects['ph'+pi+'_pr'+prIdx+'_d'+dIdx]; });
+      var projDets = (proj.details || []); var allDetailsDone = projDets.length > 0 && projDets.every(function(d, dIdx) { return completedProjects['ph'+pi+'_pr'+prIdx+'_d'+dIdx] === true; });
       var prStatus = isContingency ? '' : allDetailsDone ? 'DONE' : prSpent === 0 ? 'NOT STARTED' : prSpent >= prBudget ? 'BUDGET MET' : prPct > 80 ? 'WATCH' : 'ON TRACK';
       var prStatusColor = prStatus === 'DONE' ? '#1a5fa8' : prStatus === 'NOT STARTED' ? '#6c757d' : prStatus === 'BUDGET MET' ? '#2b4560' : prStatus === 'WATCH' ? '#c47f18' : '#2a7a5a';
       var hasDetails = proj.details && proj.details.length > 0;
