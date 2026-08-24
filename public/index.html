@@ -1225,14 +1225,7 @@ var TOTAL_VOLUNTEER_SAVINGS = 41000; // fallback — overridden by completion-ba
 
 // ── Phase schedule & project details ────────────────────────
 var PHASE_SCHEDULE = [
-  { name: 'Pre-Launch Planning', color: '#4a4a8a', startYear: 2025, startMonth: 7, endYear: 2026, endMonth: 4, budget: 0, isPreLaunch: true,
-    projects: [
-      { name: 'Pre-Launch Planning', deadline: '', budget: 0, market: 0, details: [
-          'Pre-Launch Planning & Design',
-        ]
-      },
-    ]
-  },
+
   { name: 'Phase 1: Planning, 473 Demo, Exterior Rebuild & Leased Space', color: '#2b4560', startYear: 2026, startMonth: 1, endYear: 2026, endMonth: 12, budget: 200000,
     projects: [
       { name: 'Leased Space Demo + Rough Construction', deadline: '5/31/2026', budget: 8000, market: 20000, details: [
@@ -2110,15 +2103,13 @@ var ALL_MILESTONES = [
 function getPhaseProgress() {
   // Calculate based on checked items in Phase 1 only (index 1, after Pre-Launch)
   if (typeof PHASE_SCHEDULE === 'undefined') return 0;
-  var ph1Idx = PHASE_SCHEDULE.findIndex(function(p){ return !p.isPreLaunch && p.name.indexOf('Phase 1') > -1; });
-  if (ph1Idx < 0) ph1Idx = 1;
-  var ph = PHASE_SCHEDULE[ph1Idx];
+  var ph = PHASE_SCHEDULE[0];
   var totalItems = 0, checkedItems = 0;
   (ph.projects || []).forEach(function(proj, prIdx) {
     var details = (typeof proj === 'object' && proj.details) ? proj.details : [];
     details.forEach(function(d, dIdx) {
       totalItems++;
-      var key = 'ph'+ph1Idx+'_pr'+prIdx+'_d'+dIdx;
+      var key = 'ph0_pr'+prIdx+'_d'+dIdx;
       if (completedProjects[key] === true) checkedItems++;
     });
   });
@@ -2127,10 +2118,8 @@ function getPhaseProgress() {
 
 function getCurrentPhaseNumber() {
   if (typeof PHASE_SCHEDULE === 'undefined') return 1;
-  var phases = PHASE_SCHEDULE.filter(function(p){ return !p.isPreLaunch; });
-  for (var i = 0; i < phases.length; i++) {
-    var ph = phases[i];
-    var pi = PHASE_SCHEDULE.indexOf(ph);
+  for (var pi = 0; pi < PHASE_SCHEDULE.length; pi++) {
+    var ph = PHASE_SCHEDULE[pi];
     var phTotal = 0, phChecked = 0;
     (ph.projects || []).forEach(function(proj, prIdx) {
       var details = (typeof proj === 'object' && proj.details) ? proj.details : [];
@@ -2139,9 +2128,9 @@ function getCurrentPhaseNumber() {
         if (completedProjects['ph'+pi+'_pr'+prIdx+'_d'+dIdx] === true) phChecked++;
       });
     });
-    if (phTotal === 0 || phChecked < phTotal) return i + 1;
+    if (phTotal === 0 || phChecked < phTotal) return pi + 1;
   }
-  return phases.length;
+  return PHASE_SCHEDULE.length;
 }
 
 function getMilestoneStatus(phaseIdx, milestoneMonth, milestoneYear) {
@@ -2189,8 +2178,7 @@ function renderOverview() {
         var qboYear = qboDate.getFullYear();
         var qboMonth = qboDate.getMonth() + 1;
         // Determine which phase we are currently in based on QBO date
-        var phaseCount = PHASE_SCHEDULE.filter(function(p){ return !p.isPreLaunch; }).length;
-        return 'Phase ' + getCurrentPhaseNumber() + ' of ' + phaseCount + ' phases';
+        return 'Phase ' + getCurrentPhaseNumber() + ' of 3';
       })(), color: '#2b4560' },
     { label: 'SPENT TO DATE', value: fmt(ts), sub: 'of ' + fmt(TOTAL_BUDGET) + ' total project budget', color: '#c05f3c' },
     { label: 'TOTAL VOLUNTEERS', value: totalVolPeople.toLocaleString(), sub: 'contributed across all projects', color: '#2a7a5a' },
@@ -2206,7 +2194,7 @@ function renderOverview() {
   }).join('');
 
   // ── Merged Timeline + Budget ────────────────────────────────
-  var PHASE_COLORS = ['#4a4a8a', '#2b4560', '#c05f3c', '#2a7a5a'];
+  var PHASE_COLORS = ['#2b4560', '#c05f3c', '#2a7a5a'];
   var tHtml = '';
 
   PHASE_SCHEDULE.forEach(function(ph, pi) {
@@ -2247,7 +2235,7 @@ function renderOverview() {
     tHtml += '<div style="display:flex;align-items:center;gap:8px;">';
     tHtml += '<span id="'+phId+'-arrow" style="color:#fff;font-size:.6rem;transition:transform .2s;transform:rotate(-90deg);">&#9660;</span>';
     tHtml += '<div>';
-    tHtml += '<div style="font-family:Montserrat,sans-serif;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.75);">'+( ph.isPreLaunch ? 'Pre-Launch' : 'Phase '+(PHASE_SCHEDULE.filter(function(p,idx){ return !p.isPreLaunch && idx <= pi; }).length)+' of '+(PHASE_SCHEDULE.filter(function(p){ return !p.isPreLaunch; }).length) )+'</div>';
+    tHtml += '<div style="font-family:Montserrat,sans-serif;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.75);">Phase '+(pi+1)+' of 3</div>';
     tHtml += '<div style="font-family:Montserrat,sans-serif;font-weight:700;font-size:.95rem;color:#fff;">'+shortName+'</div>';
     tHtml += '</div></div>';
     tHtml += '<div style="display:flex;align-items:center;gap:12px;">';
